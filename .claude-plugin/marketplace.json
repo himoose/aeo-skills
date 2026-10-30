@@ -1,0 +1,15 @@
+{
+  "name": "himoose",
+  "owner": {
+    "name": "Hi, Moose",
+    "url": "https://himoose.com"
+  },
+  "description": "AEO skills by Hi, Moose for answer engine optimization (AEO, GEO, AI SEO).",
+  "plugins": [
+    {
+      "name": "himoose",
+      "source": "./",
+      "description": "AEO skills by Hi, Moose: AI search visibility dashboard, report and to-do list from your Hi, Moose results, with the Hi, Moose MCP connector."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "himoose": {
+      "type": "http",
+      "url": "https://mcp.himoose.com/mcp"
+    }
+  }
+}

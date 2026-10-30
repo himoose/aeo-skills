@@ -1,0 +1,15 @@
+{
+  "name": "himoose",
+  "displayName": "Hi, Moose AEO skills",
+  "version": "0.1.0",
+  "description": "AEO skills by Hi, Moose for answer engine optimization (AEO, GEO, AI SEO): AI search visibility dashboard, report and to-do list from your Hi, Moose results, with the Hi, Moose MCP connector.",
+  "author": {
+    "name": "Hi, Moose",
+    "url": "https://himoose.com"
+  },
+  "homepage": "https://github.com/himoose/aeo-skills",
+  "repository": "https://github.com/himoose/aeo-skills",
+  "license": "MIT",
+  "privacyPolicyUrl": "https://himoose.com/privacy-policy/",
+  "keywords": ["aeo", "answer-engine-optimization", "geo", "generative-engine-optimization", "ai-seo", "ai-visibility", "llm-seo", "brand-monitoring", "chatgpt", "perplexity", "ai-overviews", "dashboard", "mcp"]
+}

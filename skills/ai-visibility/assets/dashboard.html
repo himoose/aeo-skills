@@ -1,0 +1,766 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>AI Search Visibility</title>
+<style>
+:root{--bg:#f6f6f3;--card:#fff;--ink:#1c1c1a;--muted:#66665f;--line:#e2e1db;--soft:#efeee9;--brand:#2f6f4f;--cite:#c27a1f;--rival:#9a9a92;--good:#2f7d4f;--bad:#b4442f;--high:#b4442f;--medium:#b06d14;--low:#66665f;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#121211;--card:#1c1c1a;--ink:#ecebe6;--muted:#a3a29b;--line:#34342f;--soft:#26261f;--brand:#6fbf8f;--cite:#e3a85a;--rival:#7b7a72;--good:#6fbf8f;--bad:#e8806a;--high:#e8806a;--medium:#e3a85a;--low:#a3a29b;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1120px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:24px;margin:0 0 2px}
+h2{font-size:16px;margin:0}
+.sub{color:var(--muted);font-size:14px;margin:0 0 14px}
+.badge{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;vertical-align:middle;background:var(--soft);color:var(--muted)}
+.badge.sample{background:var(--cite);color:#fff}
+[hidden]{display:none!important}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.toolbar{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0 12px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--card)}
+.seg button{border:none;background:none;padding:6px 13px;font-size:14px;cursor:pointer;color:var(--muted)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--soft);color:var(--ink);font-weight:600}
+.menu-wrap{position:relative}
+.menu{position:absolute;top:calc(100% + 6px);left:0;z-index:15;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:6px;min-width:240px}
+.menu.right{left:auto;right:0}
+.menu label{display:flex;gap:8px;align-items:center;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:14px}
+.menu label:hover,.menu .menu-item:hover{background:var(--soft)}
+.menu .menu-item{display:block;width:100%;text-align:left;background:none;border:none;padding:7px 8px;border-radius:6px;cursor:pointer;font-size:14px}
+.menu .hint{color:var(--muted);font-size:12px;margin:4px 8px}
+a.btn{display:inline-block;text-decoration:none}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--card);font-weight:600}
+.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.group{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.label{color:var(--muted);font-size:13px}
+button,select,input{font:inherit;font-size:14px;color:var(--ink)}
+.btn{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:5px 11px;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.small{font-size:13px;padding:3px 9px}
+input[type=date],select,input[type=search]{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 8px}
+.chip{border-radius:999px}
+.chip[aria-pressed="false"]{color:var(--muted);text-decoration:line-through}
+.check{display:flex;gap:6px;align-items:center;font-size:14px;cursor:pointer}
+.actions{margin-left:auto}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.tab{background:none;border:none;border-bottom:2px solid transparent;padding:8px 12px;cursor:pointer;color:var(--muted);white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink);font-weight:600}
+.panel[hidden]{display:none}
+.grid{display:grid;gap:16px;margin-bottom:16px}
+.tiles{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.two{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.card-note{color:var(--muted);font-size:13px;margin:6px 0 0}
+.tile .k{color:var(--muted);font-size:13px}
+.tile .v{font-size:30px;font-weight:650;line-height:1.2;margin:4px 0}
+.tile .d{font-size:13px;color:var(--muted)}
+.up{color:var(--good)!important}.down{color:var(--bad)!important}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+svg{display:block;width:100%;height:auto;touch-action:pan-y}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:13px}
+td.n,th.n{text-align:right;white-space:nowrap}
+.bar{height:8px;border-radius:4px;background:var(--soft);overflow:hidden;min-width:60px}
+.bar span{display:block;height:100%;background:var(--brand)}
+.scroll{overflow-x:auto}
+.empty{color:var(--muted);font-size:14px;margin:8px 0}
+.todo{border-top:1px solid var(--line);padding:12px 0}
+.todo:first-of-type{border-top:none}
+.todo h3{font-size:15px;margin:0 0 4px}
+.todo p{margin:2px 0;font-size:14px}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;border:1px solid var(--line);margin-right:6px;color:var(--muted)}
+.tag.high{color:var(--high);border-color:var(--high)}
+.tag.medium{color:var(--medium);border-color:var(--medium)}
+.notes{margin:0;padding-left:18px;color:var(--muted);font-size:14px}
+.tip{position:fixed;z-index:20;pointer-events:none;background:var(--ink);color:var(--bg);font-size:13px;line-height:1.4;padding:8px 10px;border-radius:8px;max-width:260px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.tip[hidden]{display:none}
+.tip b{display:block;margin-bottom:2px}
+.status{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:14px;z-index:30}
+.status[hidden]{display:none}
+footer{margin-top:24px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+footer a{color:inherit}
+@media print{
+  .toolbar,.tabs,.no-print,.tip,.status{display:none!important}
+  .panel{display:block!important}
+  .panel+.panel{break-before:page}
+  .card{break-inside:avoid}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="head">
+    <div>
+      <h1 id="title">AI search visibility</h1>
+      <p class="sub" id="subtitle"></p>
+    </div>
+    <div class="menu-wrap no-print">
+      <button class="btn" id="export-btn" aria-haspopup="true" aria-expanded="false">Export ▾</button>
+      <div class="menu right" id="export-menu" hidden>
+        <button class="menu-item" id="csv">Download daily numbers (CSV)</button>
+        <button class="menu-item" id="pdf">Save page as PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar" role="region" aria-label="Filters">
+    <div class="seg" role="group" aria-label="Period">
+      <button data-preset="7">7 days</button><button data-preset="30">30 days</button><button data-preset="90">90 days</button><button data-preset="custom">Custom</button>
+    </div>
+    <div class="group" id="custom-dates" hidden>
+      <input type="date" id="from" aria-label="From">
+      <span class="label">to</span>
+      <input type="date" id="to" aria-label="To">
+    </div>
+    <div class="menu-wrap">
+      <button class="btn" id="engines-btn" aria-haspopup="true" aria-expanded="false">All engines ▾</button>
+      <div class="menu" id="engines-menu" hidden></div>
+    </div>
+    <label class="check"><input type="checkbox" id="compare" checked> Compare with the period before</label>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="overview" aria-selected="true">Overview</button>
+    <button class="tab" role="tab" data-tab="missed" aria-selected="false" id="tab-missed">Answers that left the brand out</button>
+    <button class="tab" role="tab" data-tab="todo" aria-selected="false" id="tab-todo">To-do list</button>
+  </div>
+
+  <section class="panel" id="panel-overview" role="tabpanel">
+    <div class="grid tiles" id="tiles"></div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head">
+        <h2>Brand mention and citation rate by day</h2>
+        <div class="group">
+          <label class="check no-print"><input type="checkbox" id="avg" checked> 7-day average</label>
+          <button class="btn small no-print" data-png="trend">Save PNG</button>
+        </div>
+      </div>
+      <div class="legend"><span><i style="background:var(--brand)"></i>Mentioned</span><span><i style="background:var(--cite)"></i>Cited</span><span>Hollow dots: fewer than 5 answers that day</span></div>
+      <div id="trend"></div>
+    </div>
+    <div class="grid two">
+      <div class="card">
+        <div class="card-head"><h2>By AI engine</h2><button class="btn small no-print" data-png="engines">Save PNG</button></div>
+        <div id="engines"></div>
+        <p class="card-note no-print">Click an engine to show only that engine. Click it again to show all.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>Your tracked brand vs. competitors</h2><button class="btn small no-print" data-png="competitors">Save PNG</button></div>
+        <div id="competitors"></div>
+        <p class="card-note" id="competitors-note"></p>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head"><h2>By topic</h2></div>
+      <div class="scroll" id="topics"></div>
+      <p class="card-note" id="topics-note"></p>
+    </div>
+    <div class="card"><h2 style="margin-bottom:8px">About these numbers</h2><ul class="notes" id="notes"></ul></div>
+  </section>
+
+  <section class="panel" id="panel-missed" role="tabpanel" hidden>
+    <div class="card">
+      <div class="card-head">
+        <h2 id="missed-title">Answers that left the brand out</h2>
+        <div class="group no-print">
+          <input type="search" id="missed-search" placeholder="Search prompts or brands" aria-label="Search">
+          <button class="btn small" id="missed-csv">Download CSV</button>
+        </div>
+      </div>
+      <div class="scroll" id="missed"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-todo" role="tabpanel" hidden>
+    <div class="card">
+      <div class="card-head">
+        <h2 id="todo-title">To-do list</h2>
+        <div class="group no-print">
+          <span class="label">Priority</span>
+          <select id="todo-priority" aria-label="Priority"><option value="">All</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select>
+        </div>
+      </div>
+      <p class="card-note" id="todo-summary" style="margin:0 0 8px"></p>
+      <div id="todo"></div>
+    </div>
+  </section>
+
+  <footer><span id="generated"></span><span>AI search data collected by <a href="https://himoose.com" rel="noopener">Hi, Moose</a></span></footer>
+</main>
+<div class="tip" id="tip" hidden></div>
+<div class="status" id="status" role="status" hidden></div>
+
+<script type="application/json" id="dashboard-data">
+{"schemaVersion":2,"sample":true,"brand":"Northwind Tools"}
+</script>
+<script>
+(function () {
+  'use strict';
+  var NS = 'http://www.w3.org/2000/svg';
+  var DAY = 86400000;
+  var data;
+  try { data = JSON.parse(document.getElementById('dashboard-data').textContent) || {}; } catch (e) { data = {}; }
+  if (data.sample && !Array.isArray(data.byEngine)) data = makeSample(data.brand || 'Northwind Tools');
+
+  function arr(v) { return Array.isArray(v) ? v : []; }
+  function toMs(d) { return Date.parse(d + 'T00:00:00Z'); }
+  function key(ms) { return new Date(ms).toISOString().slice(0, 10); }
+  function addDays(d, n) { return key(toMs(d) + n * DAY); }
+  function span(a, b) { return Math.round((toMs(b) - toMs(a)) / DAY) + 1; }
+  function nice(d) { return new Date(toMs(d)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }); }
+  function niceY(d) { return new Date(toMs(d)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }); }
+  function rate(p, t) { return t > 0 ? p / t : null; }
+  function pct(p, t) { var r = rate(p, t); return r === null ? '–' : Math.round(r * 100) + '%'; }
+  function num(v) { return typeof v === 'number' && isFinite(v) ? v.toLocaleString('en-US') : '–'; }
+  function el(tag, attrs, text) { var n = document.createElement(tag); if (attrs) for (var k in attrs) n.setAttribute(k, attrs[k]); if (text != null) n.textContent = String(text); return n; }
+  function sv(tag, attrs) { var n = document.createElementNS(NS, tag); for (var k in attrs) n.setAttribute(k, attrs[k]); return n; }
+  function svText(x, y, text, attrs) { var t = sv('text', Object.assign({ x: x, y: y, fill: color('--muted'), 'font-size': 11 }, attrs || {})); t.textContent = text; return t; }
+  function color(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#888'; }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function fit(text, max) { text = String(text); return text.length > max ? text.slice(0, max - 1).trimEnd() + '…' : text; }
+
+  var engines = arr(data.engines).map(String);
+  var topics = arr(data.topics).map(String);
+  var prompts = arr(data.prompts).map(String);
+  var names = arr(data.names).map(String);
+  function rows(v, len) { return arr(v).filter(function (r) { return Array.isArray(r) && r.length >= len && typeof r[0] === 'string'; }); }
+  var byEngine = rows(data.byEngine, 5);
+  var nonBranded = rows(data.nonBranded, 5);
+  var missed = rows(data.missed, 4);
+  var windows = data.windows && typeof data.windows === 'object' ? data.windows : {};
+  var todo = data.todo && typeof data.todo === 'object' ? data.todo : { items: [] };
+  var projectId = typeof data.projectId === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(data.projectId) ? data.projectId : null;
+  function baseName(name) { return String(name || '').replace(/ \(local fetch\)$/, ''); }
+  function displayName(i) {
+    var name = engines[i] || '', base = baseName(name);
+    var twin = engines.some(function (other, j) { return j !== i && baseName(other) === base; });
+    return twin && base === name ? base + ' (API)' : base;
+  }
+  function activeEngines() {
+    var seen = {};
+    byEngine.forEach(function (r) { if (inRange(r[0], state.from, state.to) && (+r[2] || 0) > 0) seen[r[1]] = true; });
+    return engines.map(function (_, i) { return i; }).filter(function (i) { return seen[i]; });
+  }
+
+  var allDays = byEngine.map(function (r) { return r[0]; }).sort();
+  var first = (data.span && data.span.from) || allDays[0] || key(Date.now());
+  var last = (data.span && data.span.to) || allDays[allDays.length - 1] || key(Date.now());
+
+  var state = { from: first, to: last, preset: null, compare: true, avg: true, engines: engines.map(function (_, i) { return i; }), tab: 'overview', search: '', priority: '' };
+  setPreset(span(first, last) >= 30 ? 30 : null);
+
+  var brand = data.brand || 'Your brand';
+  document.title = 'AI Search Visibility: ' + brand;
+  var title = document.getElementById('title');
+  title.textContent = 'AI search visibility: ' + brand;
+  if (data.sample) title.appendChild(el('span', { 'class': 'badge sample' }, 'Sample data'));
+  document.getElementById('subtitle').textContent = 'Results stored by Hi, Moose from ' + niceY(first) + ' to ' + niceY(last) + '. Pick a period and engines below.';
+  document.getElementById('generated').textContent = data.generatedAt ? 'Report generated on ' + niceY(data.generatedAt) : '';
+
+  var fromInput = document.getElementById('from');
+  var toInput = document.getElementById('to');
+  [fromInput, toInput].forEach(function (i) { i.min = first; i.max = last; });
+
+  function setPreset(n) {
+    state.preset = n;
+    if (n) { state.to = last; state.from = addDays(last, -(n - 1)); if (state.from < first) state.from = first; }
+  }
+
+  function selected(e) { return state.engines.indexOf(e) !== -1; }
+  function inRange(d, a, b) { return d >= a && d <= b; }
+  function sum(list, a, b) {
+    var t = { a: 0, m: 0, c: 0 };
+    list.forEach(function (r) { if (inRange(r[0], a, b) && selected(r[1])) { t.a += +r[2] || 0; t.m += +r[3] || 0; t.c += +r[4] || 0; } });
+    return t;
+  }
+  function previous() {
+    var n = span(state.from, state.to);
+    var pTo = addDays(state.from, -1), pFrom = addDays(state.from, -n);
+    return pFrom >= first ? { from: pFrom, to: pTo } : null;
+  }
+
+  var tip = document.getElementById('tip');
+  function showTip(evt, lines) {
+    clear(tip);
+    lines.forEach(function (l, i) { tip.appendChild(el(i ? 'div' : 'b', null, l)); });
+    tip.hidden = false;
+    var w = tip.offsetWidth, h = tip.offsetHeight;
+    var x = evt.clientX + 14, y = evt.clientY + 14;
+    if (x + w > window.innerWidth - 8) x = evt.clientX - w - 14;
+    if (y + h > window.innerHeight - 8) y = evt.clientY - h - 14;
+    tip.style.left = Math.max(8, x) + 'px'; tip.style.top = Math.max(8, y) + 'px';
+  }
+  function hideTip() { tip.hidden = true; }
+
+  var statusBox = document.getElementById('status'), statusTimer = null;
+  function say(text) { statusBox.textContent = text; statusBox.hidden = false; clearTimeout(statusTimer); statusTimer = setTimeout(function () { statusBox.hidden = true; }, 4000); }
+
+  function renderControls() {
+    document.querySelectorAll('[data-preset]').forEach(function (b) { var v = b.dataset.preset; b.setAttribute('aria-pressed', String(v === 'custom' ? state.preset === null : +v === state.preset)); });
+    document.getElementById('custom-dates').hidden = state.preset !== null;
+    fromInput.value = state.from; toInput.value = state.to;
+    document.getElementById('compare').checked = state.compare;
+    document.getElementById('avg').checked = state.avg;
+    var active = activeEngines(), on = active.filter(selected);
+    document.getElementById('engines-btn').textContent = (on.length === active.length ? 'All engines' : on.length + ' of ' + active.length + ' engines') + ' ▾';
+    var menu = document.getElementById('engines-menu'); clear(menu);
+    if (!active.length) { menu.appendChild(el('p', { 'class': 'hint' }, 'No answers in this period.')); return; }
+    active.forEach(function (i) {
+      var label = el('label'), box = el('input', { type: 'checkbox' });
+      box.checked = selected(i);
+      box.addEventListener('change', function () {
+        if (box.checked) { if (!selected(i)) state.engines.push(i); }
+        else { state.engines = state.engines.filter(function (e) { return e !== i; }); if (!active.some(selected)) state.engines.push(i); }
+        render();
+      });
+      label.appendChild(box); label.appendChild(document.createTextNode(displayName(i)));
+      menu.appendChild(label);
+    });
+    var all = el('button', { 'class': 'menu-item' }, 'Show all engines');
+    all.addEventListener('click', function () { state.engines = engines.map(function (_, j) { return j; }); render(); });
+    menu.appendChild(all);
+    var idle = engines.map(function (_, i) { return i; }).filter(function (i) { return active.indexOf(i) === -1; });
+    if (idle.length) menu.appendChild(el('p', { 'class': 'hint' }, 'No answers in this period: ' + idle.map(displayName).join(', ')));
+  }
+
+  function renderTiles() {
+    var box = document.getElementById('tiles'); clear(box);
+    var now = sum(byEngine, state.from, state.to);
+    var p = state.compare ? previous() : null;
+    var before = p ? sum(byEngine, p.from, p.to) : null;
+    function delta(m, a, bm, ba) {
+      if (!before) return state.compare ? { t: 'No earlier data in this file', c: '' } : null;
+      var r1 = rate(m, a), r0 = rate(bm, ba);
+      if (r1 === null || r0 === null) return { t: 'No answers before', c: '' };
+      var d = Math.round((r1 - r0) * 100);
+      return { t: (d > 0 ? '+' : '') + d + ' points vs. ' + nice(p.from) + ' to ' + nice(p.to), c: d > 0 ? 'up' : d < 0 ? 'down' : '' };
+    }
+    var tiles = [
+      { k: 'Brand mentioned', v: pct(now.m, now.a), s: num(now.m) + ' of ' + num(now.a) + ' answers', d: delta(now.m, now.a, before && before.m, before && before.a) },
+      { k: 'Brand cited (linked)', v: pct(now.c, now.a), s: num(now.c) + ' of ' + num(now.a) + ' answers', d: delta(now.c, now.a, before && before.c, before && before.a) }
+    ];
+    if (nonBranded.length) {
+      var nb = sum(nonBranded, state.from, state.to), nbb = before ? sum(nonBranded, p.from, p.to) : null;
+      tiles.push({ k: 'Mentions from non-branded prompts', v: pct(nb.m, nb.a), s: num(nb.m) + ' of ' + num(nb.a) + ' answers', d: before ? (function () { var r1 = rate(nb.m, nb.a), r0 = rate(nbb.m, nbb.a); if (r1 === null || r0 === null) return { t: 'No answers before', c: '' }; var d = Math.round((r1 - r0) * 100); return { t: (d > 0 ? '+' : '') + d + ' points vs. before', c: d > 0 ? 'up' : d < 0 ? 'down' : '' }; })() : null });
+    }
+    tiles.push({ k: 'Answers checked', v: num(now.a), s: span(state.from, state.to) + ' days, ' + activeEngines().filter(selected).length + ' engines', d: before ? { t: num(before.a) + ' in the period before', c: '' } : null });
+    tiles.forEach(function (x) {
+      var c = el('div', { 'class': 'card tile' });
+      c.appendChild(el('div', { 'class': 'k' }, x.k));
+      c.appendChild(el('div', { 'class': 'v' }, x.v));
+      c.appendChild(el('div', { 'class': 'd' }, x.s));
+      if (x.d) c.appendChild(el('div', { 'class': 'd ' + x.d.c }, x.d.t));
+      box.appendChild(c);
+    });
+  }
+
+  function daily() {
+    var map = {};
+    byEngine.forEach(function (r) {
+      if (!inRange(r[0], state.from, state.to) || !selected(r[1])) return;
+      var t = map[r[0]] || (map[r[0]] = { a: 0, m: 0, c: 0 });
+      t.a += +r[2] || 0; t.m += +r[3] || 0; t.c += +r[4] || 0;
+    });
+    return Object.keys(map).sort().filter(function (d) { return map[d].a > 0; }).map(function (d) { return { day: d, a: map[d].a, m: map[d].m, c: map[d].c }; });
+  }
+
+  function renderTrend() {
+    var box = document.getElementById('trend'); clear(box);
+    var days = daily();
+    if (days.length < 2) { box.appendChild(el('p', { 'class': 'empty' }, 'Not enough run days in this period to draw a trend.')); return; }
+    var pts = days.map(function (d, i) {
+      if (!state.avg) return { day: d.day, a: d.a, m: d.m, c: d.c, raw: d };
+      var t = { a: 0, m: 0, c: 0 };
+      for (var j = i; j >= 0 && span(days[j].day, d.day) <= 7; j--) { t.a += days[j].a; t.m += days[j].m; t.c += days[j].c; }
+      return { day: d.day, a: t.a, m: t.m, c: t.c, raw: d };
+    });
+    var W = 760, H = 260, L = 40, R = 14, T = 12, B = 30;
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Brand mention and citation rate by day', 'font-family': 'system-ui, sans-serif', 'data-chart': 'trend' });
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (v) {
+      var y = T + (H - T - B) * (1 - v);
+      svg.appendChild(sv('line', { x1: L, x2: W - R, y1: y, y2: y, stroke: color('--line') }));
+      svg.appendChild(svText(L - 6, y + 4, Math.round(v * 100) + '%', { 'text-anchor': 'end' }));
+    });
+    var t0 = toMs(pts[0].day), t1 = toMs(pts[pts.length - 1].day);
+    function x(d) { return t1 === t0 ? (L + W - R) / 2 : L + (W - L - R) * (toMs(d) - t0) / (t1 - t0); }
+    function y(v) { return T + (H - T - B) * (1 - Math.max(0, Math.min(1, v || 0))); }
+    [['m', '--brand'], ['c', '--cite']].forEach(function (s) {
+      var c = color(s[1]);
+      var d = pts.map(function (p, i) { return (i ? 'L' : 'M') + x(p.day).toFixed(1) + ' ' + y(rate(p[s[0]], p.a)).toFixed(1); }).join(' ');
+      svg.appendChild(sv('path', { d: d, fill: 'none', stroke: c, 'stroke-width': 2.5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+      pts.forEach(function (p) {
+        var small = p.raw.a < 5;
+        svg.appendChild(sv('circle', { cx: x(p.day), cy: y(rate(p[s[0]], p.a)), r: 3, fill: small ? color('--card') : c, stroke: c, 'stroke-width': 1.5 }));
+      });
+    });
+    var ticks = Math.min(7, pts.length), lastX = -999;
+    for (var i = 0; i < ticks; i++) {
+      var p = pts[Math.round(i * (pts.length - 1) / Math.max(1, ticks - 1))];
+      var px = x(p.day);
+      if (px - lastX < 60) continue;
+      lastX = px;
+      svg.appendChild(svText(px, H - 8, nice(p.day), { 'text-anchor': px > W - R - 30 ? 'end' : px < L + 30 ? 'start' : 'middle' }));
+    }
+    var cross = sv('line', { y1: T, y2: H - B, stroke: color('--muted'), 'stroke-dasharray': '3 3', visibility: 'hidden', 'data-ui': '1' });
+    svg.appendChild(cross);
+    var hit = sv('rect', { x: L, y: T, width: W - L - R, height: H - T - B, fill: 'transparent', 'data-ui': '1' });
+    svg.appendChild(hit);
+    function move(evt) {
+      var r = svg.getBoundingClientRect();
+      var mx = (evt.clientX - r.left) * (W / r.width);
+      var best = pts[0], bd = Infinity;
+      pts.forEach(function (p) { var d = Math.abs(x(p.day) - mx); if (d < bd) { bd = d; best = p; } });
+      cross.setAttribute('x1', x(best.day)); cross.setAttribute('x2', x(best.day)); cross.setAttribute('visibility', 'visible');
+      var lines = [niceY(best.day) + ', ' + best.raw.a + ' answer' + (best.raw.a === 1 ? '' : 's'),
+        'Mentioned: ' + best.raw.m + ' (' + pct(best.raw.m, best.raw.a) + ')',
+        'Cited: ' + best.raw.c + ' (' + pct(best.raw.c, best.raw.a) + ')'];
+      if (state.avg) lines.push('7-day average: mentioned ' + pct(best.m, best.a) + ', cited ' + pct(best.c, best.a) + ' of ' + best.a);
+      if (best.raw.a < 5) lines.push('Small sample that day');
+      showTip(evt, lines);
+    }
+    hit.addEventListener('pointermove', move);
+    hit.addEventListener('pointerdown', move);
+    hit.addEventListener('pointerleave', function () { cross.setAttribute('visibility', 'hidden'); hideTip(); });
+    box.appendChild(svg);
+  }
+
+  function renderEngines() {
+    var box = document.getElementById('engines'); clear(box);
+    var list = engines.map(function (name, i) {
+      var t = { a: 0, m: 0, c: 0 };
+      byEngine.forEach(function (r) { if (r[1] === i && inRange(r[0], state.from, state.to)) { t.a += +r[2] || 0; t.m += +r[3] || 0; t.c += +r[4] || 0; } });
+      return { i: i, name: displayName(i), a: t.a, m: t.m, c: t.c };
+    }).filter(function (e) { return e.a > 0; }).sort(function (p, q) { return (rate(q.m, q.a) || 0) - (rate(p.m, p.a) || 0); });
+    if (!list.length) { box.appendChild(el('p', { 'class': 'empty' }, 'No answers in this period.')); return; }
+    var rowH = 46, W = 520, L = 150, R = 50, H = list.length * rowH + 24;
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Mention and citation rate by AI engine', 'font-family': 'system-ui, sans-serif', 'data-chart': 'engines' });
+    svg.appendChild(svText(L, 12, 'Mentioned', { fill: color('--brand'), 'font-weight': 600 }));
+    svg.appendChild(svText(L + 80, 12, 'Cited', { fill: color('--cite'), 'font-weight': 600 }));
+    list.forEach(function (e, k) {
+      var y0 = 24 + k * rowH, on = selected(e.i);
+      var g = sv('g', { cursor: 'pointer', opacity: on ? 1 : 0.4 });
+      g.appendChild(svText(0, y0 + 17, fit(e.name, 20), { fill: color('--ink'), 'font-size': 13 }));
+      g.appendChild(svText(0, y0 + 32, num(e.a) + ' answers' + (e.a < 10 ? ', small sample' : ''), { 'font-size': 11 }));
+      [['m', '--brand', 4], ['c', '--cite', 21]].forEach(function (s) {
+        var r = rate(e[s[0]], e.a) || 0, w = (W - L - R) * r;
+        g.appendChild(sv('rect', { x: L, y: y0 + s[2], width: W - L - R, height: 13, rx: 3, fill: color('--soft') }));
+        g.appendChild(sv('rect', { x: L, y: y0 + s[2], width: Math.max(w, 1), height: 13, rx: 3, fill: color(s[1]) }));
+        g.appendChild(svText(L + Math.max(w, 1) + 6, y0 + s[2] + 11, pct(e[s[0]], e.a), { fill: color('--ink') }));
+      });
+      g.addEventListener('pointermove', function (evt) { showTip(evt, [e.name, num(e.a) + ' answers', 'Mentioned: ' + e.m + ' (' + pct(e.m, e.a) + ')', 'Cited: ' + e.c + ' (' + pct(e.c, e.a) + ')', 'Click to show only this engine']); });
+      g.addEventListener('pointerleave', hideTip);
+      g.addEventListener('click', function () {
+        state.engines = state.engines.length === 1 && state.engines[0] === e.i ? engines.map(function (_, j) { return j; }) : [e.i];
+        hideTip(); render();
+      });
+      svg.appendChild(g);
+    });
+    box.appendChild(svg);
+  }
+
+  function windowFor() {
+    var n = span(state.from, state.to), keys = Object.keys(windows).map(Number).filter(function (k) { return k > 0; }).sort(function (a, b) { return a - b; });
+    if (!keys.length) return null;
+    var exact = state.to === last && keys.indexOf(n) !== -1 ? n : null;
+    var pick = exact || keys.filter(function (k) { return k >= n; })[0] || keys[keys.length - 1];
+    var w = windows[pick] || windows[String(pick)];
+    return w ? { days: pick, exact: !!exact, w: w } : null;
+  }
+
+  function renderCompetitors() {
+    var box = document.getElementById('competitors'); clear(box);
+    var note = document.getElementById('competitors-note');
+    var win = windowFor();
+    var comp = win && win.w.competitors;
+    var list = comp ? arr(comp.rows) : [];
+    if (!list.length) { box.appendChild(el('p', { 'class': 'empty' }, 'No competitors tracked for this project.')); note.textContent = ''; return; }
+    var total = +comp.answers || 0;
+    list = list.map(function (r) { return { name: String(r.name), own: !!r.own, m: +r.mentioned || 0 }; }).sort(function (p, q) { return (q.own - p.own) || (q.m - p.m); }).slice(0, 10);
+    var rowH = 30, W = 520, L = 160, R = 50, H = list.length * rowH + 8;
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Share of answers that name each brand', 'font-family': 'system-ui, sans-serif', 'data-chart': 'competitors' });
+    list.forEach(function (r, k) {
+      var y0 = 4 + k * rowH, share = rate(r.m, total) || 0, w = (W - L - R) * share;
+      var g = sv('g', {});
+      g.appendChild(svText(0, y0 + 15, r.own ? fit(r.name, 15) + ' (you)' : fit(r.name, 21), { fill: color('--ink'), 'font-size': 13, 'font-weight': r.own ? 600 : 400 }));
+      g.appendChild(sv('rect', { x: L, y: y0 + 4, width: W - L - R, height: 14, rx: 3, fill: color('--soft') }));
+      g.appendChild(sv('rect', { x: L, y: y0 + 4, width: Math.max(w, 1), height: 14, rx: 3, fill: r.own ? color('--brand') : color('--rival') }));
+      g.appendChild(svText(L + Math.max(w, 1) + 6, y0 + 15, pct(r.m, total), { fill: color('--ink') }));
+      g.addEventListener('pointermove', function (evt) { showTip(evt, [r.own ? r.name + ' (you)' : r.name, 'Named in ' + num(r.m) + ' of ' + num(total) + ' answers (' + pct(r.m, total) + ')']); });
+      g.addEventListener('pointerleave', hideTip);
+      svg.appendChild(g);
+    });
+    box.appendChild(svg);
+    note.textContent = 'Share of answers that name each brand, all engines, ' + nice(win.w.from) + ' to ' + nice(win.w.to) + (win.exact ? '.' : ' (the closest saved period; topics and competitors follow the 7, 30 and 90 day buttons).');
+  }
+
+  function renderTopics() {
+    var box = document.getElementById('topics'); clear(box);
+    var note = document.getElementById('topics-note');
+    var win = windowFor();
+    var list = win ? arr(win.w.topics) : [];
+    if (!list.length) { box.appendChild(el('p', { 'class': 'empty' }, 'No topics in this period.')); note.textContent = ''; return; }
+    var table = el('table'), head = el('tr');
+    ['Topic', 'Answers', 'Mentioned', '', 'Cited'].forEach(function (h, i) { head.appendChild(el('th', i && i !== 3 ? { 'class': 'n' } : null, h)); });
+    table.appendChild(head);
+    list.slice().sort(function (p, q) { return (+q.answers || 0) - (+p.answers || 0); }).forEach(function (t) {
+      var a = +t.answers || 0, m = +t.mentioned || 0, c = +t.cited || 0, tr = el('tr');
+      tr.appendChild(el('td', null, t.name + (a < 10 ? ' (small sample)' : '')));
+      tr.appendChild(el('td', { 'class': 'n' }, num(a)));
+      tr.appendChild(el('td', { 'class': 'n' }, pct(m, a)));
+      var cell = el('td'), bar = el('div', { 'class': 'bar' }), fill = el('span');
+      fill.style.width = Math.round((rate(m, a) || 0) * 100) + '%'; bar.appendChild(fill); cell.appendChild(bar); tr.appendChild(cell);
+      tr.appendChild(el('td', { 'class': 'n' }, pct(c, a)));
+      table.appendChild(tr);
+    });
+    box.appendChild(table);
+    note.textContent = 'All engines, ' + nice(win.w.from) + ' to ' + nice(win.w.to) + (win.exact ? '.' : ' (the closest saved period).');
+  }
+
+  function renderNotes() {
+    var box = document.getElementById('notes'); clear(box);
+    arr(data.notes).forEach(function (n) { box.appendChild(el('li', null, String(n))); });
+    box.appendChild(el('li', null, 'This page holds results from ' + niceY(first) + ' to ' + niceY(last) + '. For other dates, ask for a new dashboard.'));
+  }
+
+  function missedRows() {
+    var q = state.search.trim().toLowerCase();
+    return missed.filter(function (r) { return inRange(r[0], state.from, state.to) && selected(r[1]); }).map(function (r) {
+      return { day: r[0], engine: displayName(r[1]), prompt: prompts[r[2]] || '', named: arr(r[3]).map(function (i) { return names[i] || ''; }).filter(Boolean) };
+    }).filter(function (r) { return !q || (r.prompt + ' ' + r.named.join(' ') + ' ' + r.engine).toLowerCase().indexOf(q) !== -1; })
+      .sort(function (p, q2) { return p.day < q2.day ? 1 : p.day > q2.day ? -1 : 0; });
+  }
+
+  function renderMissed() {
+    var box = document.getElementById('missed'); clear(box);
+    var list = missedRows();
+    document.getElementById('tab-missed').textContent = 'Answers that left the brand out (' + list.length + ')';
+    document.getElementById('missed-title').textContent = list.length + ' answers in this period did not mention ' + brand;
+    if (!list.length) { box.appendChild(el('p', { 'class': 'empty' }, missed.length ? 'None match this period, engines or search.' : 'No answers left the brand out.')); return; }
+    var table = el('table'), head = el('tr');
+    ['Date', 'Engine', 'Prompt', 'Named instead'].forEach(function (h) { head.appendChild(el('th', null, h)); });
+    table.appendChild(head);
+    list.slice(0, 500).forEach(function (r) {
+      var tr = el('tr');
+      tr.appendChild(el('td', { style: 'white-space:nowrap' }, nice(r.day)));
+      tr.appendChild(el('td', null, r.engine));
+      tr.appendChild(el('td', null, r.prompt));
+      tr.appendChild(el('td', null, r.named.join(', ') || 'No tracked competitor'));
+      table.appendChild(tr);
+    });
+    box.appendChild(table);
+    if (list.length > 500) box.appendChild(el('p', { 'class': 'empty' }, 'Showing the newest 500. Download the CSV for all ' + list.length + '.'));
+  }
+
+  function renderTodo() {
+    var box = document.getElementById('todo'); clear(box);
+    var items = arr(todo.items);
+    var shown = items.filter(function (t) { return !state.priority || String(t.priority).toLowerCase() === state.priority; });
+    document.getElementById('tab-todo').textContent = 'To-do list (' + items.length + ')';
+    document.getElementById('todo-title').textContent = 'To-do list' + (todo.from && todo.to ? ', ' + nice(todo.from) + ' to ' + nice(todo.to) : '');
+    var summary = [];
+    if (todo.summary) summary.push(String(todo.summary));
+    if (typeof todo.totalOpen === 'number' && todo.totalOpen > items.length) summary.push((todo.totalOpen - items.length) + ' more open items are in the Opportunities tab in Hi, Moose.');
+    if (projectId && items.some(function (t) { return t.id; })) summary.push('The Open buttons open the Hi, Moose desktop app on this computer.');
+    document.getElementById('todo-summary').textContent = summary.join(' ');
+    if (!shown.length) { box.appendChild(el('p', { 'class': 'empty' }, items.length ? 'No items with this priority.' : 'No open items.')); return; }
+    shown.forEach(function (t, i) {
+      var div = el('div', { 'class': 'todo' });
+      div.appendChild(el('h3', null, (items.indexOf(t) + 1) + '. ' + (t.title || '')));
+      var tags = el('p');
+      var pr = String(t.priority || '').toLowerCase();
+      if (pr) tags.appendChild(el('span', { 'class': 'tag ' + pr }, pr.charAt(0).toUpperCase() + pr.slice(1) + ' priority'));
+      if (t.effort) tags.appendChild(el('span', { 'class': 'tag' }, String(t.effort)));
+      if (t.action) tags.appendChild(el('span', { 'class': 'tag' }, String(t.action)));
+      div.appendChild(tags);
+      if (t.why) div.appendChild(el('p', null, String(t.why)));
+      if (t.next) { var p = el('p'); p.appendChild(el('strong', null, 'Next: ')); p.appendChild(document.createTextNode(String(t.next))); div.appendChild(p); }
+      var meta = [];
+      if (arr(t.engines).length) meta.push(arr(t.engines).join(', '));
+      if (t.prompts) meta.push(t.prompts + ' prompt' + (t.prompts === 1 ? '' : 's'));
+      if (t.confidence) meta.push(String(t.confidence));
+      if (meta.length) div.appendChild(el('p', { style: 'color:var(--muted);font-size:13px' }, meta.join(' · ')));
+      var buttons = el('div', { 'class': 'buttons no-print' }), link = appLink(t);
+      if (link) buttons.appendChild(el('a', { 'class': 'btn small primary', href: link.url }, link.label));
+      if (t.ask) {
+        var copy = el('button', { 'class': 'btn small' }, 'Copy request for your assistant');
+        copy.addEventListener('click', function () { copyText(String(t.ask)); });
+        buttons.appendChild(copy);
+      }
+      if (buttons.childNodes.length) div.appendChild(buttons);
+      box.appendChild(div);
+    });
+  }
+
+  function render() {
+    renderControls(); renderTiles(); renderTrend(); renderEngines(); renderCompetitors(); renderTopics(); renderNotes(); renderMissed(); renderTodo();
+  }
+
+  function csvCell(v) { var s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+  function download(name, blob) {
+    try {
+      var url = URL.createObjectURL(blob), a = el('a', { href: url, download: name });
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+      say('Saved ' + name);
+    } catch (e) { say('This viewer blocked the download. Open the file in a web browser to save it.'); }
+  }
+  function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  function fileBase() { return 'ai-visibility-' + slug(brand) + '-' + state.from + '-to-' + state.to; }
+  function appLink(t) {
+    if (!projectId || !t || !t.id) return null;
+    if (/brand truth/i.test(String(t.appAction || ''))) return { url: 'himoose://context?open=brand-truth-profile&projectId=' + encodeURIComponent(projectId), label: 'Open Brand Truth Profile in Hi, Moose' };
+    return { url: 'himoose://visibility?projectId=' + encodeURIComponent(projectId) + '&tab=opportunities&opportunity=' + encodeURIComponent(String(t.id)), label: 'Open in Hi, Moose' };
+  }
+  function copyText(text) {
+    var done = 'Copied. Paste it into Claude or ChatGPT with Hi, Moose connected.';
+    function legacy() {
+      try {
+        var ta = el('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        var ok = document.execCommand('copy'); ta.remove();
+        say(ok ? done : 'Copying is blocked here. The request is: ' + text);
+      } catch (e) { say('Copying is blocked here. The request is: ' + text); }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { say(done); }, legacy); else legacy();
+  }
+
+  function savePng(name) {
+    var svg = document.querySelector('[data-chart="' + name + '"]');
+    if (!svg) { say('Nothing to save for this chart.'); return; }
+    try {
+      var vb = svg.viewBox.baseVal, w = vb.width, h = vb.height, top = 34;
+      var out = sv('svg', { xmlns: NS, width: w, height: h + top, viewBox: '0 0 ' + w + ' ' + (h + top), 'font-family': 'system-ui, sans-serif' });
+      out.appendChild(sv('rect', { width: w, height: h + top, fill: color('--card') }));
+      var heading = svg.closest('.card').querySelector('h2').textContent;
+      out.appendChild(svText(0, 14, brand + ': ' + heading, { fill: color('--ink'), 'font-size': 14, 'font-weight': 600 }));
+      out.appendChild(svText(0, 28, nice(state.from) + ' to ' + nice(state.to) + (activeEngines().filter(selected).length < activeEngines().length ? ', ' + activeEngines().filter(selected).map(displayName).join(', ') : ''), { 'font-size': 11 }));
+      var g = sv('g', { transform: 'translate(0,' + top + ')' });
+      Array.prototype.forEach.call(svg.childNodes, function (n) { if (!(n.getAttribute && n.getAttribute('data-ui'))) g.appendChild(n.cloneNode(true)); });
+      out.appendChild(g);
+      var xml = new XMLSerializer().serializeToString(out);
+      var img = new Image();
+      img.onload = function () {
+        var s = 2, c = document.createElement('canvas');
+        c.width = w * s; c.height = (h + top) * s;
+        var ctx = c.getContext('2d'); ctx.scale(s, s); ctx.drawImage(img, 0, 0, w, h + top);
+        c.toBlob(function (b) { if (b) download(fileBase() + '-' + name + '.png', b); else say('This viewer blocked the download. Open the file in a web browser to save it.'); }, 'image/png');
+      };
+      img.onerror = function () { say('This viewer blocked the image. Open the file in a web browser to save it.'); };
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(xml);
+    } catch (e) { say('This viewer blocked the download. Open the file in a web browser to save it.'); }
+  }
+
+  function dailyCsv() {
+    var lines = [['Date', 'Answers', 'Mentioned', 'Cited', 'Mention rate', 'Citation rate'].join(',')];
+    daily().forEach(function (d) { lines.push([d.day, d.a, d.m, d.c, pct(d.m, d.a), pct(d.c, d.a)].map(csvCell).join(',')); });
+    download(fileBase() + '-daily.csv', new Blob([lines.join('\n')], { type: 'text/csv' }));
+  }
+  function missedCsv() {
+    var lines = [['Date', 'Engine', 'Prompt', 'Named instead'].join(',')];
+    missedRows().forEach(function (r) { lines.push([r.day, r.engine, r.prompt, r.named.join('; ')].map(csvCell).join(',')); });
+    download(fileBase() + '-answers-without-brand.csv', new Blob([lines.join('\n')], { type: 'text/csv' }));
+  }
+
+  document.querySelectorAll('[data-preset]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      if (b.dataset.preset === 'custom') state.preset = null; else setPreset(+b.dataset.preset);
+      render();
+    });
+  });
+  function closeMenus() {
+    ['engines', 'export'].forEach(function (n) { document.getElementById(n + '-menu').hidden = true; document.getElementById(n + '-btn').setAttribute('aria-expanded', 'false'); });
+  }
+  ['engines', 'export'].forEach(function (n) {
+    var btn = document.getElementById(n + '-btn'), menu = document.getElementById(n + '-menu');
+    btn.addEventListener('click', function (e) { e.stopPropagation(); var open = menu.hidden; closeMenus(); menu.hidden = !open; btn.setAttribute('aria-expanded', String(open)); });
+    menu.addEventListener('click', function (e) { e.stopPropagation(); });
+  });
+  document.addEventListener('click', closeMenus);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenus(); });
+  function onDate() {
+    var f = fromInput.value || first, t = toInput.value || last;
+    if (f < first) f = first; if (t > last) t = last;
+    if (f > t) { var x = f; f = t; t = x; }
+    state.from = f; state.to = t; state.preset = null; render();
+  }
+  fromInput.addEventListener('change', onDate); toInput.addEventListener('change', onDate);
+  document.getElementById('compare').addEventListener('change', function (e) { state.compare = e.target.checked; render(); });
+  document.getElementById('avg').addEventListener('change', function (e) { state.avg = e.target.checked; renderTrend(); });
+  document.getElementById('missed-search').addEventListener('input', function (e) { state.search = e.target.value; renderMissed(); });
+  document.getElementById('todo-priority').addEventListener('change', function (e) { state.priority = e.target.value; renderTodo(); });
+  document.getElementById('csv').addEventListener('click', function () { closeMenus(); dailyCsv(); });
+  document.getElementById('missed-csv').addEventListener('click', missedCsv);
+  document.getElementById('pdf').addEventListener('click', function () { closeMenus(); try { window.print(); } catch (e) { say('This viewer blocked printing. Open the file in a web browser and use Print, Save as PDF.'); } });
+  document.querySelectorAll('[data-png]').forEach(function (b) { b.addEventListener('click', function () { savePng(b.dataset.png); }); });
+  document.querySelectorAll('[data-tab]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      state.tab = b.dataset.tab;
+      document.querySelectorAll('[data-tab]').forEach(function (x) { x.setAttribute('aria-selected', String(x === b)); });
+      ['overview', 'missed', 'todo'].forEach(function (t) { document.getElementById('panel-' + t).hidden = t !== state.tab; });
+      hideTip();
+    });
+  });
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) mq.addEventListener('change', render);
+  }
+  window.addEventListener('scroll', hideTip, { passive: true });
+  render();
+
+  function makeSample(brandName) {
+    var seed = 11;
+    function rnd() { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
+    var end = '2026-10-29', eng = ['ChatGPT', 'Perplexity', 'Google AI Overview', 'Google AI Mode'], base = [0.38, 0.55, 0.72, 0.66], cite = [0.18, 0.44, 0.55, 0.47];
+    var be = [], nb = [];
+    for (var d = 89; d >= 0; d--) {
+      var day = addDaysRaw(end, -d), lift = (89 - d) / 89 * 0.08;
+      if (new Date(Date.parse(day + 'T00:00:00Z')).getUTCDay() === 0) continue;
+      eng.forEach(function (_, e) {
+        var a = 10 + Math.floor(rnd() * 4), m = Math.round(a * Math.min(1, base[e] + lift + (rnd() - 0.5) * 0.2)), c = Math.min(m, Math.round(a * Math.min(1, cite[e] + lift + (rnd() - 0.5) * 0.2)));
+        be.push([day, e, a, m, c]);
+        var na = 4 + Math.floor(rnd() * 3), nm = Math.round(na * Math.min(1, base[e] * 0.5 + (rnd() - 0.5) * 0.3));
+        nb.push([day, e, na, Math.max(0, nm), Math.max(0, Math.min(nm, Math.round(nm * 0.6)))]);
+      });
+    }
+    function win(n) {
+      var from = addDaysRaw(end, -(n - 1)), t = { a: 0, m: 0, c: 0 };
+      be.forEach(function (r) { if (r[0] >= from) { t.a += r[2]; t.m += r[3]; t.c += r[4]; } });
+      return { from: from, to: end, topics: [
+        { name: 'Buying guides', answers: Math.round(t.a * 0.5), mentioned: Math.round(t.m * 0.55), cited: Math.round(t.c * 0.55) },
+        { name: 'Alternatives', answers: Math.round(t.a * 0.3), mentioned: Math.round(t.m * 0.25), cited: Math.round(t.c * 0.22) },
+        { name: 'How-to', answers: Math.round(t.a * 0.2), mentioned: Math.round(t.m * 0.2), cited: Math.round(t.c * 0.23) }
+      ], competitors: { answers: t.a, rows: [
+        { name: brandName, own: true, mentioned: t.m },
+        { name: 'Contoso', own: false, mentioned: Math.round(t.a * 0.56) },
+        { name: 'Fabrikam', own: false, mentioned: Math.round(t.a * 0.33) },
+        { name: 'Tailspin', own: false, mentioned: Math.round(t.a * 0.13) }
+      ] } };
+    }
+    var pr = ['What are the best tools for small workshops?', 'Alternatives to Contoso for home use', 'Which brand of cordless drill lasts longest?', 'Best tool kit for a first apartment'];
+    var ms = [];
+    for (var i = 0; i < 40; i++) ms.push([addDaysRaw(end, -Math.floor(rnd() * 89)), Math.floor(rnd() * 4), Math.floor(rnd() * 4), rnd() > 0.3 ? [Math.floor(rnd() * 3)] : []]);
+    return {
+      schemaVersion: 2, sample: true, brand: brandName, generatedAt: end, span: { from: addDaysRaw(end, -89), to: end },
+      engines: eng, topics: ['Buying guides', 'Alternatives', 'How-to'], byEngine: be, nonBranded: nb,
+      windows: { '7': win(7), '30': win(30), '90': win(90) },
+      prompts: pr, names: ['Contoso', 'Fabrikam', 'Tailspin'], missed: ms,
+      todo: { from: addDaysRaw(end, -7), to: end, totalOpen: 3, summary: 'Sample items: two share one cause, a comparison page that does not name the brand.', items: [
+        { title: 'ChatGPT names Contoso, not you, for "best tools for small workshops"', priority: 'high', effort: 'Medium effort', action: 'Create coverage', why: '6 of 8 ChatGPT answers this week named Contoso and Fabrikam; none named the brand.', next: 'Write a buying guide page that answers this prompt directly.', engines: ['ChatGPT'], prompts: 1, confidence: 'Strong: held on 6 of 8 runs', ask: 'Use Hi, Moose to create a content brief for the prompt "What are the best tools for small workshops?"' },
+        { title: 'A review site cited by Perplexity lists Contoso but not you', priority: 'medium', effort: 'Small effort', action: 'Earn inclusion', why: 'Perplexity cited the same third-party list in 5 answers.', next: 'Ask the site to add the brand, with a short product summary.', engines: ['Perplexity'], prompts: 2, confidence: 'Needs a check' },
+        { title: 'Google AI Overview repeats an old price', priority: 'low', effort: 'Small effort', action: 'Correct the description', why: '2 answers quote last year\'s price.', next: 'Update the price on the pricing page and in the Brand Truth Profile.', engines: ['Google AI Overview'], prompts: 1, confidence: 'Lead, not a pattern' }
+      ] },
+      notes: ['Sample data: made-up numbers so you can try the controls. Ask for your dashboard to see your own results.', 'Counts cover the tracked prompts on the tracked engines only, not the whole of AI search.']
+    };
+  }
+  function addDaysRaw(d, n) { return new Date(Date.parse(d + 'T00:00:00Z') + n * 86400000).toISOString().slice(0, 10); }
+})();
+</script>
+</body>
+</html>

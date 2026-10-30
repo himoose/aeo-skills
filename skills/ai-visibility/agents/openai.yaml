@@ -1,0 +1,14 @@
+interface:
+  display_name: "AI search visibility"
+  short_description: "Dashboard, report or to-do list of how AI engines mention and cite your brand, from Hi, Moose results"
+  brand_color: "#2F6F4F"
+  default_prompt: "Build my AI search visibility dashboard."
+policy:
+  allow_implicit_invocation: true
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "himoose"
+      description: "Hi, Moose MCP: stored AI search visibility results and the Opportunities work queue"
+      transport: "streamable_http"
+      url: "https://mcp.himoose.com/mcp"
