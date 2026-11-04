@@ -588,12 +588,14 @@ footer a{color:inherit}
       if (meta.length) div.appendChild(el('p', { style: 'color:var(--muted);font-size:13px' }, meta.join(' · ')));
       var buttons = el('div', { 'class': 'buttons no-print' }), link = appLink(t);
       if (link) buttons.appendChild(el('a', { 'class': 'btn small primary', href: link.url }, link.label));
+      var isBrief = t.tool === 'create_content_brief';
       if (t.ask) {
-        var copy = el('button', { 'class': 'btn small' }, 'Copy request for your assistant');
+        var copy = el('button', { 'class': 'btn small' }, isBrief ? 'Copy brief request' : 'Copy request for your assistant');
         copy.addEventListener('click', function () { copyText(String(t.ask)); });
         buttons.appendChild(copy);
       }
       if (buttons.childNodes.length) div.appendChild(buttons);
+      if (t.ask && isBrief) div.appendChild(el('p', { 'class': 'no-print', style: 'color:var(--muted);font-size:13px' }, 'The brief uses this item\'s evidence and Hi, Moose\'s live search research. Free plans include one researched brief a day.'));
       box.appendChild(div);
     });
   }
@@ -752,7 +754,7 @@ footer a{color:inherit}
       windows: { '7': win(7), '30': win(30), '90': win(90) },
       prompts: pr, names: ['Contoso', 'Fabrikam', 'Tailspin'], missed: ms,
       todo: { from: addDaysRaw(end, -7), to: end, totalOpen: 3, summary: 'Sample items: two share one cause, a comparison page that does not name the brand.', items: [
-        { title: 'ChatGPT names Contoso, not you, for "best tools for small workshops"', priority: 'high', effort: 'Medium effort', action: 'Create coverage', why: '6 of 8 ChatGPT answers this week named Contoso and Fabrikam; none named the brand.', next: 'Write a buying guide page that answers this prompt directly.', engines: ['ChatGPT'], prompts: 1, confidence: 'Strong: held on 6 of 8 runs', ask: 'Use Hi, Moose to create a content brief for the prompt "What are the best tools for small workshops?"' },
+        { title: 'ChatGPT names Contoso, not you, for "best tools for small workshops"', priority: 'high', effort: 'Medium effort', action: 'Create coverage', why: '6 of 8 ChatGPT answers this week named Contoso and Fabrikam; none named the brand.', next: 'Write a buying guide page that answers this prompt directly.', engines: ['ChatGPT'], prompts: 1, confidence: 'Strong: held on 6 of 8 runs', tool: 'create_content_brief', ask: 'Use Hi, Moose to create a content brief for the opportunity sample-1, the prompt "What are the best tools for small workshops?"' },
         { title: 'A review site cited by Perplexity lists Contoso but not you', priority: 'medium', effort: 'Small effort', action: 'Earn inclusion', why: 'Perplexity cited the same third-party list in 5 answers.', next: 'Ask the site to add the brand, with a short product summary.', engines: ['Perplexity'], prompts: 2, confidence: 'Needs a check' },
         { title: 'Google AI Overview repeats an old price', priority: 'low', effort: 'Small effort', action: 'Correct the description', why: '2 answers quote last year\'s price.', next: 'Update the price on the pricing page and in the Brand Truth Profile.', engines: ['Google AI Overview'], prompts: 1, confidence: 'Lead, not a pattern' }
       ] },

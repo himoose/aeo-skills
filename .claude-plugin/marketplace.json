@@ -9,7 +9,7 @@
     {
       "name": "himoose",
       "source": "./",
-      "description": "AEO skills by Hi, Moose: AI search visibility dashboard, report and to-do list from your Hi, Moose results, with the Hi, Moose MCP connector."
+      "description": "AEO skills by Hi, Moose: AI search visibility dashboard, report and to-do list, and publish-ready articles from your AI search opportunities (researched brief, draft, AEO audit fixes, internal links, FAQs, featured image), with the Hi, Moose MCP connector."
     }
   ]
 }

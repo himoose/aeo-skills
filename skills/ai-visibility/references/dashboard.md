@@ -48,7 +48,7 @@ Valid JSON, numbers as numbers, no rounding. Lists of rows are short arrays to k
   "todo": {
     "from": "<range.from>", "to": "<range.to>", "totalOpen": <totalOpen>,
     "summary": "<one or two sentences when several items share one cause, else empty>",
-    "items": [{ "id": "<opportunityId>", "appAction": "<appAction>", "ask": "<request to paste into the assistant, or empty>", "title": "<one plain sentence>", "priority": "<priority>", "effort": "<effortLabel>", "action": "<actionLabel>",
+    "items": [{ "id": "<opportunityId>", "appAction": "<appAction>", "tool": "<connectorTool, or empty>", "ask": "<request to paste into the assistant, or empty>", "title": "<one plain sentence>", "priority": "<priority>", "effort": "<effortLabel>", "action": "<actionLabel>",
                 "why": "<confidenceLine>", "next": "<next>", "engines": ["<engines>"], "prompts": <promptCount> }]
   },
   "notes": ["<one short line each>"]
@@ -62,7 +62,8 @@ Rules for the block:
 - `windows`: keys `"7"`, `"30"`, `"90"`. Up to 9 competitor rows after the brand, by `mentioned`.
 - `missed`: up to 200 rows from step 5, newest first. `prompts` and `names` hold each prompt text and competitor name once; rows point to them by position. A row with no competitors named has `[]`.
 - `projectId`: the id from `list_projects` for this project. The page uses it with each item's `id` to build "Open in Hi, Moose" buttons that open the item in the Hi, Moose desktop app; without it the buttons do not show. Never build the links yourself.
-- `ask`: when the row has a `connectorTool`, one sentence the user can paste into their assistant to start that work through Hi, Moose MCP, naming the prompt or page from the row, for example `Use Hi, Moose to create a content brief for the prompt "best AEO tools for agencies"`, or for `visibility_get_answer`, `Use Hi, Moose to show me the evidence and the answers behind the opportunity <opportunityId>`. Leave it empty when there is no `connectorTool`.
+- `tool`: the row's `connectorTool` exactly as returned, or empty. With `create_content_brief` the page labels the button "Copy brief request" and notes the free plan's daily brief.
+- `ask`: when the row has a `connectorTool`, one sentence the user can paste into their assistant to start that work through Hi, Moose MCP, naming the prompt or page from the row. For `create_content_brief`, name the opportunity id and the prompt, so the brief can use the item's evidence: `Use Hi, Moose to create a content brief for the opportunity <opportunityId>, the prompt "best AEO tools for agencies"`. For `visibility_get_answer`, `Use Hi, Moose to show me the evidence and the answers behind the opportunity <opportunityId>`. Leave it empty when there is no `connectorTool`.
 - `todo.items`: every row from step 6, in order. The row `headline` is often cut off with "…"; write `title` as one plain full sentence from the headline. When several items share a cause (most often claims flagged as "not in the Brand Truth Profile" that may be true), say so in `summary` without calling any claim true or false.
 - `notes`: always include "Counts cover the tracked prompts on the tracked engines only, not the whole of AI search." Add "Local fetch means Hi, Moose read the answer in a browser on the user's computer." when engine names end in "(local fetch)". Add one line naming engines that appear only in part of the 90 days, and one if the 90 days start before `history.firstDay`.
 

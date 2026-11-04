@@ -19,7 +19,7 @@ For each of the top 5, in this order:
 - **Headline:** one plain sentence saying what the answers get wrong or where the brand is missing. The row's `headline` is often cut off with "…"; use the evidence (`detail.found`, `detail.flags[].reason`) to write the full sentence.
 - **Why it matters:** one or two sentences from the evidence: which prompts, which engines, which competitors appear instead (`competitors`, `rivalName`, `rivalPct` against `youPct`), which pages get cited instead (`pagesCitedInstead`). Use numbers with their sample: "named in 1 of 8 answers".
 - **Next step:** the row's `next`.
-- **How to start:** if `connectorTool` is set, offer to run that Hi, Moose tool now (for example `create_content_brief`, `refresh_content`, `run_aeo_audit`, `find_internal_links`) and name what you would pass it (the prompt, the page URL). Otherwise use `connectorHint` or `appAction`, which point to the step in the Hi, Moose app.
+- **How to start:** if `connectorTool` is set, offer to run that Hi, Moose tool now (for example `create_content_brief`, `refresh_content`, `run_aeo_audit`, `find_internal_links`) and name what you would pass it (the prompt, the page URL). For `create_content_brief`, offer a brief for this opportunity by its id, and when the `publish-ready-draft` skill is installed, also offer the whole piece: brief, draft, audit fixes, links, FAQs and image. Otherwise use `connectorHint` or `appAction`, which point to the step in the Hi, Moose app.
 - **Effort and priority:** `effortLabel` and `priorityLabel`, plus `confidenceLine` when present.
 
 For every other open item, one line: the headline as a plain sentence, then `next`, then effort and priority in brackets. Number all items in one list so the user can say "do number 7".

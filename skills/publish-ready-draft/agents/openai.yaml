@@ -1,0 +1,14 @@
+interface:
+  display_name: "Publish-ready draft"
+  short_description: "From an AI search opportunity or a topic to a finished article: researched brief, draft, AEO audit with fixes applied, internal links, key points, FAQs and featured image, through Hi, Moose"
+  brand_color: "#2F6F4F"
+  default_prompt: "Write me a publish-ready article from my top AI search opportunity."
+policy:
+  allow_implicit_invocation: true
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "himoose"
+      description: "Hi, Moose MCP: content briefs, drafts, AEO audits, internal links, FAQs, key points, featured images and the Opportunities work queue"
+      transport: "streamable_http"
+      url: "https://mcp.himoose.com/mcp"
