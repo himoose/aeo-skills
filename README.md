@@ -8,6 +8,7 @@ Open source skills by [Hi, Moose](https://himoose.com) for answer engine optimiz
 | Skill | What it does |
 |---|---|
 | [`ai-visibility`](skills/ai-visibility/SKILL.md) | AI search visibility dashboard, report and to-do list from your Hi, Moose results. |
+| [`weekly-content-plan`](skills/weekly-content-plan/SKILL.md) | This week's content plan from your AI search opportunities: the top three pieces with the evidence behind each and the rest grouped by topic, with researched briefs when you ask. |
 | [`publish-ready-draft`](skills/publish-ready-draft/SKILL.md) | One AI search opportunity or topic taken all the way to a finished article: researched brief, draft, AEO audit with the fixes applied, internal links, key points, FAQs and featured image. |
 
 New skills are added often. Each one lives in its own folder under `skills/` and installs on its own.
@@ -27,6 +28,28 @@ See how AI engines talk about your brand: how often they mention and cite you, a
 | "What should I work on this week to show up more in AI search?" | Your open fixes, ranked: the top five in full with the prompts, engines and competitors behind them, the rest one line each. |
 
 The skill only reads results Hi, Moose has already stored. It never runs new checks, changes settings or publishes anything.
+
+## weekly-content-plan
+
+What to write this week, and why.
+
+1. **The queue.** Hi, Moose ranks your open AI search opportunities, the same list as the Opportunities tab in the app. The skill keeps the writing work: prompts no page of yours answers (a new piece) and pages of yours that are losing (a refresh).
+2. **Grouped by topic.** Each piece sits under the topic of the prompts it answers. Two opportunities that ask the same question become one piece.
+3. **Nothing written twice.** Before choosing, the skill checks your site crawl and your saved briefs. If a page already covers a topic, the piece becomes a refresh of that page; if a brief already exists, it is used.
+4. **The week's three.** The top three pieces, in Hi, Moose's order, each with the evidence: the prompts, the AI engines that leave your brand out, the competitor they name instead and the pages they cite.
+5. **Briefs when you ask.** The plan only reads what Hi, Moose has stored. Say "make the briefs" afterwards for a researched brief for each new piece, read against the pages the AI engines cited, and a refresh brief with a revised draft for each page that exists.
+
+You get the plan with every other writing item grouped by topic and numbered, so you can say "brief number 6" or "write number 1" (with `publish-ready-draft` installed, that takes the piece to a finished article).
+
+### What you can ask for
+
+| Ask | You get |
+|---|---|
+| "What should I write this week based on my AI search opportunities?" | The plan: this week's three pieces and the rest of the writing work by topic, with the briefs offered. |
+| "Make my content plan for this week and the briefs for it." | The plan, then the briefs for the week's pieces. |
+| "Give me a content plan for our pricing topic, five pieces." | Five pieces from that topic only. |
+
+Each brief takes one to three minutes and each refresh three to six. On the free plan, the first brief is the day's run with live research; the skill then asks whether to make the rest without it or one a day.
 
 ## publish-ready-draft
 
@@ -68,7 +91,7 @@ Before a new piece, the skill checks whether your site already covers the topic.
 1. **Get Hi, Moose (free).** [Download the desktop app](https://himoose.com/downloads/) and add your site. For `ai-visibility`, add the prompts you want to track and run your first visibility check.
 2. **Connect Hi, Moose to your AI app.** Add a custom connector with the address `https://mcp.himoose.com/mcp` and sign in with your Hi, Moose account. [Step-by-step for Claude, ChatGPT and others](https://himoose.com/docs/integrations/hi-moose-mcp/).
 3. **Add the skills** you want to your app: see [Install](#install) below.
-4. **Ask** for your dashboard, your to-do list or a publish-ready article. Keep the Hi, Moose desktop app open while you ask.
+4. **Ask** for your dashboard, your to-do list, this week's content plan or a publish-ready article. Keep the Hi, Moose desktop app open while you ask.
 
 ## Install
 
@@ -94,7 +117,7 @@ This repository is also a Claude Code plugin. One install adds every skill and t
 /plugin install himoose@himoose
 ```
 
-Then run `/mcp`, choose `plugin:himoose:himoose` and **Authenticate** to sign in. Ask in plain words, or run `/himoose:ai-visibility` or `/himoose:publish-ready-draft`.
+Then run `/mcp`, choose `plugin:himoose:himoose` and **Authenticate** to sign in. Ask in plain words, or run `/himoose:ai-visibility`, `/himoose:weekly-content-plan` or `/himoose:publish-ready-draft`.
 
 If you already connected Hi, Moose to Claude Code yourself, you will see the same tools twice. Remove one of them in `/mcp`.
 
@@ -150,7 +173,7 @@ You can, but API answers can differ from what people see in the apps, and you wo
 Yes. In Claude Code it installs as a plugin with the Hi, Moose connector. In Codex and other agents that read `SKILL.md` skill folders, copy the `skills/ai-visibility` folder and connect Hi, Moose MCP. See [Install](#install).
 
 **Does the skill send my data anywhere?**
-No. The skills work through Hi, Moose MCP and show the results in your own chat. `ai-visibility` only reads your stored results. `publish-ready-draft` makes a brief, a draft, an audit, FAQs, key points and an image, which Hi, Moose also saves in your Library; it publishes nothing. The skills hold no keys.
+No. The skills work through Hi, Moose MCP and show the results in your own chat. `ai-visibility` only reads your stored results. `weekly-content-plan` reads them, and makes briefs only when you ask, which Hi, Moose saves in your Library. `publish-ready-draft` makes a brief, a draft, an audit, FAQs, key points and an image, which Hi, Moose also saves in your Library; it publishes nothing. The skills hold no keys.
 
 ## Why Hi, Moose collects the data
 
@@ -177,6 +200,10 @@ skills/ai-visibility/
   references/report-template.md the report layout
   references/weekly-actions.md  how to build the to-do list
   assets/dashboard.html         the dashboard page (opens with sample data)
+  agents/openai.yaml            ChatGPT and Codex settings
+skills/weekly-content-plan/
+  SKILL.md                      the steps from the opportunity queue to the week's plan
+  references/plan-layout.md     the layout of the plan
   agents/openai.yaml            ChatGPT and Codex settings
 skills/publish-ready-draft/
   SKILL.md                      the steps from opportunity or topic to a finished article

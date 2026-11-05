@@ -1,0 +1,14 @@
+interface:
+  display_name: "Weekly content plan"
+  short_description: "This week's content plan from your AI search opportunities: the top three pieces with the evidence behind each and the rest grouped by topic, with researched briefs when you ask, through Hi, Moose"
+  brand_color: "#2F6F4F"
+  default_prompt: "Make my content plan for this week from my AI search opportunities."
+policy:
+  allow_implicit_invocation: true
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "himoose"
+      description: "Hi, Moose MCP: the Opportunities work queue, tracked prompts and topics, site coverage checks, saved briefs, content briefs and content refreshes"
+      transport: "streamable_http"
+      url: "https://mcp.himoose.com/mcp"

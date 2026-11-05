@@ -1,8 +1,8 @@
 {
   "name": "himoose",
   "displayName": "Hi, Moose AEO skills",
-  "version": "0.2.0",
-  "description": "AEO skills by Hi, Moose for answer engine optimization (AEO, GEO, AI SEO): AI search visibility dashboard, report and to-do list, and publish-ready articles from your AI search opportunities: researched brief, draft in your voice, AEO audit with the fixes applied, internal links, FAQs and featured image, with the Hi, Moose MCP connector.",
+  "version": "0.3.0",
+  "description": "AEO skills by Hi, Moose for answer engine optimization (AEO, GEO, AI SEO): AI search visibility dashboard, report and to-do list, a weekly content plan from your AI search opportunities with briefs on request, and publish-ready articles from your AI search opportunities: researched brief, draft in your voice, AEO audit with the fixes applied, internal links, FAQs and featured image, with the Hi, Moose MCP connector.",
   "author": {
     "name": "Hi, Moose",
     "url": "https://himoose.com"
@@ -11,5 +11,5 @@
   "repository": "https://github.com/himoose/aeo-skills",
   "license": "MIT",
   "privacyPolicyUrl": "https://himoose.com/privacy-policy/",
-  "keywords": ["aeo", "answer-engine-optimization", "geo", "generative-engine-optimization", "ai-seo", "ai-visibility", "llm-seo", "brand-monitoring", "chatgpt", "perplexity", "ai-overviews", "dashboard", "content-brief", "seo-content-brief", "content-strategy", "aeo-audit", "content-writing", "mcp"]
+  "keywords": ["aeo", "answer-engine-optimization", "geo", "generative-engine-optimization", "ai-seo", "ai-visibility", "llm-seo", "brand-monitoring", "chatgpt", "perplexity", "ai-overviews", "dashboard", "content-brief", "seo-content-brief", "content-strategy", "content-plan", "content-calendar","aeo-audit", "content-writing", "mcp"]
 }

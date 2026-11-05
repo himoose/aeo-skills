@@ -32,3 +32,4 @@ After the list, add one line with the window, `answersRead`, `promptCount`, `eng
 - Never promise an outcome ("this will get you cited"). Say what the evidence shows and what the step changes.
 - Do not run any Hi, Moose tool that creates content until the user says yes.
 - Offer the interactive dashboard at the end: it holds the same list with "Open in Hi, Moose" buttons for each item.
+- When the user asks what to write rather than what to fix, and the `weekly-content-plan` skill is installed, use it instead: it keeps the writing work, groups it by topic and picks the week's pieces.
