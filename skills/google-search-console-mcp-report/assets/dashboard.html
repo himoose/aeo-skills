@@ -1,0 +1,891 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Google Search Report</title>
+<style>
+:root{--bg:#f6f6f3;--card:#fff;--ink:#1c1c1a;--muted:#66665f;--line:#e2e1db;--soft:#efeee9;--brand:#2f6f4f;--cite:#c27a1f;--rival:#9a9a92;--good:#2f7d4f;--bad:#b4442f;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#121211;--card:#1c1c1a;--ink:#ecebe6;--muted:#a3a29b;--line:#34342f;--soft:#26261f;--brand:#6fbf8f;--cite:#e3a85a;--rival:#7b7a72;--good:#6fbf8f;--bad:#e8806a;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1120px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:24px;margin:0 0 2px}
+h2{font-size:16px;margin:0}
+.sub{color:var(--muted);font-size:14px;margin:0 0 14px}
+.badge{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;font-size:13px;font-weight:600;vertical-align:middle;background:var(--cite);color:#fff}
+[hidden]{display:none!important}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-bottom:14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--card)}
+.seg button{border:none;background:none;padding:6px 13px;font-size:14px;cursor:pointer;color:var(--muted)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--soft);color:var(--ink);font-weight:600}
+.menu-wrap{position:relative}
+.menu{position:absolute;top:calc(100% + 6px);right:0;z-index:15;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:6px;min-width:250px}
+.menu .menu-item{display:block;width:100%;text-align:left;background:none;border:none;padding:7px 8px;border-radius:6px;cursor:pointer;font-size:14px}
+.menu .menu-item:hover{background:var(--soft)}
+.group{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+button,select,input{font:inherit;font-size:14px;color:var(--ink)}
+.btn{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:5px 11px;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn.small{font-size:13px;padding:3px 9px}
+.check{display:flex;gap:6px;align-items:center;font-size:14px;cursor:pointer}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.tab{background:none;border:none;border-bottom:2px solid transparent;padding:8px 12px;cursor:pointer;color:var(--muted);white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink);font-weight:600}
+.grid{display:grid;gap:16px;margin-bottom:16px}
+.tiles{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.two{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0}
+.card.gap{margin-bottom:16px}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.card-note{color:var(--muted);font-size:13px;margin:6px 0 0}
+.dates{color:var(--muted);font-size:13px;margin:0 0 8px}
+.tile .k{color:var(--muted);font-size:13px}
+.tile .v{font-size:30px;font-weight:650;line-height:1.2;margin:4px 0}
+.tile .d{font-size:13px;color:var(--muted)}
+.up{color:var(--good)!important}.down{color:var(--bad)!important}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:4px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+svg{display:block;width:100%;height:auto;touch-action:pan-y}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}
+th{color:var(--muted);font-weight:600;font-size:13px}
+td.n,th.n{text-align:right;white-space:nowrap}
+.scroll{overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.scroll::-webkit-scrollbar{height:8px}
+.scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+.empty{color:var(--muted);font-size:14px;margin:8px 0}
+.short{margin:0;padding-left:18px;font-size:15px}
+.short li{margin:2px 0}
+.todo{border-top:1px solid var(--line);padding:12px 0}
+.todo:first-of-type{border-top:none}
+.todo h3{font-size:15px;margin:0 0 4px}
+.todo p{margin:2px 0;font-size:14px}
+.todo .takes{color:var(--muted);font-size:13px}
+.notes{margin:0;padding-left:18px;color:var(--muted);font-size:14px}
+.tip{position:fixed;z-index:20;pointer-events:none;background:var(--ink);color:var(--bg);font-size:13px;line-height:1.4;padding:8px 10px;border-radius:8px;max-width:300px;box-shadow:0 4px 16px rgba(0,0,0,.2);overflow-wrap:anywhere}
+.tip b{display:block;margin-bottom:2px}
+.status{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:14px;z-index:30;max-width:90vw}
+footer{margin-top:24px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+footer a{color:inherit}
+@media print{
+  .tabs,.no-print,.tip,.status{display:none!important}
+  .panel{display:block!important}
+  .panel+.panel{break-before:page}
+  .card{break-inside:avoid}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="head">
+    <div>
+      <h1 id="title">Google Search report</h1>
+      <p class="sub" id="subtitle"></p>
+    </div>
+    <div class="menu-wrap no-print">
+      <button class="btn" id="export-btn" aria-haspopup="true" aria-expanded="false">Export ▾</button>
+      <div class="menu" id="export-menu" hidden>
+        <button class="menu-item" id="csv-daily">Download daily numbers (CSV)</button>
+        <button class="menu-item" id="csv-rows">Download searches with their pages (CSV)</button>
+        <button class="menu-item" id="pdf">Save page as PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="overview" aria-selected="true">Overview</button>
+    <button class="tab" role="tab" data-tab="changed" aria-selected="false">What changed</button>
+    <button class="tab" role="tab" data-tab="work" aria-selected="false">Where to work</button>
+    <button class="tab" role="tab" data-tab="ai" aria-selected="false">Google and AI search</button>
+    <button class="tab" role="tab" data-tab="todo" aria-selected="false" id="tab-todo">To-do list</button>
+  </div>
+
+  <section class="panel" id="panel-overview" role="tabpanel">
+    <div class="toolbar no-print" role="region" aria-label="Period">
+      <div class="seg" role="group" aria-label="Period">
+        <button data-days="7">7 days</button><button data-days="28">28 days</button><button data-days="90">90 days</button>
+      </div>
+      <label class="check"><input type="checkbox" id="compare" checked> Compare with the period before</label>
+    </div>
+    <div class="card gap" id="short-card"><h2 style="margin-bottom:8px">In short</h2><ul class="short" id="short"></ul></div>
+    <div class="grid tiles" id="tiles"></div>
+    <div class="card gap">
+      <div class="card-head">
+        <h2 id="trend-title">Clicks by day</h2>
+        <div class="group">
+          <div class="seg no-print" role="group" aria-label="Number to show">
+            <button data-metric="clicks">Clicks</button><button data-metric="impressions">Impressions</button><button data-metric="ctr">CTR</button><button data-metric="position">Position</button>
+          </div>
+          <label class="check no-print" id="avg-wrap"><input type="checkbox" id="avg" checked> 7-day average</label>
+          <button class="btn small no-print" data-png="trend">Save PNG</button>
+        </div>
+      </div>
+      <p class="dates" id="trend-dates"></p>
+      <div class="legend"><span><i style="background:var(--brand)"></i>This period</span><span id="trend-legend-before"><i style="background:var(--rival)"></i>Period before (dashed)</span></div>
+      <div id="trend"></div>
+    </div>
+    <div class="card gap" id="brand-card">
+      <div class="card-head"><h2>Clicks from brand and non-brand searches</h2><button class="btn small no-print" data-png="brand">Save PNG</button></div>
+      <p class="dates" id="brand-dates"></p>
+      <div class="legend"><span><i style="background:var(--brand)"></i>Searches that name the brand</span><span><i style="background:var(--cite)"></i>All other searches</span><span><i style="background:var(--rival)"></i>Rare searches Google does not list</span></div>
+      <div id="brand"></div>
+      <p class="card-note" id="brand-note"></p>
+    </div>
+    <div class="card"><h2 style="margin-bottom:8px">About these numbers</h2><ul class="notes" id="notes"></ul></div>
+  </section>
+
+  <section class="panel" id="panel-changed" role="tabpanel" hidden>
+    <div class="card gap">
+      <div class="card-head"><h2>Searches: change in clicks</h2><button class="btn small no-print" data-png="changed-searches">Save PNG</button></div>
+      <p class="dates" data-changed-dates></p>
+      <div id="changed-searches"></div>
+      <div class="scroll" id="changed-searches-table"></div>
+    </div>
+    <div class="card gap">
+      <div class="card-head"><h2>Pages: change in clicks</h2><button class="btn small no-print" data-png="changed-pages">Save PNG</button></div>
+      <p class="dates" data-changed-dates></p>
+      <div id="changed-pages"></div>
+      <div class="scroll" id="changed-pages-table"></div>
+    </div>
+    <p class="card-note" id="changed-note"></p>
+  </section>
+
+  <section class="panel" id="panel-work" role="tabpanel" hidden>
+    <div class="card gap">
+      <div class="card-head"><h2>Position and CTR of your top searches</h2><button class="btn small no-print" data-png="scatter">Save PNG</button></div>
+      <p class="dates" data-work-dates></p>
+      <div class="legend"><span><i style="background:var(--brand)"></i>A search with its page; a larger dot is shown more often</span><span><i style="background:var(--cite)"></i>On page one, not clicked</span></div>
+      <div id="scatter"></div>
+      <p class="card-note">Brand searches are left out. Hover over a dot for the search and its numbers.</p>
+    </div>
+    <div class="card gap">
+      <div class="card-head"><h2>Where the impressions and the clicks sit, by position</h2><button class="btn small no-print" data-png="bands">Save PNG</button></div>
+      <p class="dates" data-work-dates></p>
+      <div class="legend"><span><i style="background:var(--cite)"></i>Share of impressions</span><span><i style="background:var(--brand)"></i>Share of clicks</span></div>
+      <div id="bands"></div>
+      <p class="card-note" id="bands-note"></p>
+    </div>
+    <div class="card gap"><h2 style="margin-bottom:4px">On page one, not clicked</h2><p class="dates" data-work-dates></p><div class="scroll" id="not-clicked"></div><p class="card-note" id="not-clicked-note"></p></div>
+    <div class="card gap"><h2 style="margin-bottom:4px">Just off page one</h2><p class="dates" data-work-dates></p><div class="scroll" id="off-page-one"></div></div>
+    <div class="card gap"><h2 style="margin-bottom:4px">Two pages for the same search</h2><p class="dates" data-work-dates></p><div class="scroll" id="two-pages"></div></div>
+    <div class="card gap"><h2 style="margin-bottom:4px">Questions people search</h2><p class="dates" data-work-dates></p><div class="scroll" id="questions"></div><p class="card-note" id="questions-note"></p></div>
+    <div class="card"><h2 style="margin-bottom:4px">Pages that lost clicks over four weeks</h2><p class="dates" id="lost-dates"></p><div class="scroll" id="lost-pages"></div></div>
+  </section>
+
+  <section class="panel" id="panel-ai" role="tabpanel" hidden>
+    <div class="card">
+      <div class="card-head">
+        <h2>Your pages in Google Search and in AI answers</h2>
+        <div class="group">
+          <div class="seg no-print" role="group" aria-label="Pages to show" id="ai-seg">
+            <button data-ai="all">All</button><button data-ai="both">In both</button><button data-ai="google">Google only</button><button data-ai="ai">AI only</button>
+          </div>
+          <button class="btn small no-print" data-png="ai">Save PNG</button>
+        </div>
+      </div>
+      <p class="dates" id="ai-dates"></p>
+      <div class="legend" id="ai-legend"><span><i style="background:var(--brand)"></i>Google clicks</span><span><i style="background:var(--cite)"></i>Stored AI answers that cite the page</span></div>
+      <div id="ai"></div>
+      <p class="card-note" id="ai-note"></p>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-todo" role="tabpanel" hidden>
+    <div class="card">
+      <h2 style="margin-bottom:8px" id="todo-title">To-do list</h2>
+      <div id="todo"></div>
+      <p class="card-note" id="todo-note"></p>
+    </div>
+  </section>
+
+  <footer><span id="generated"></span><span>Google Search Console &amp; AI search data, through <a href="https://himoose.com/?utm_source=skills-gsc-mcp-report" rel="noopener">Hi, Moose AEO</a></span></footer>
+</main>
+<div class="tip" id="tip" hidden></div>
+<div class="status" id="status" role="status" hidden></div>
+
+<script type="application/json" id="dashboard-data">
+{"schemaVersion":1,"sample":true,"brand":"Northwind Tools"}
+</script>
+<script>
+(function () {
+  'use strict';
+  var NS = 'http://www.w3.org/2000/svg';
+  var DAY = 86400000;
+  var data;
+  try { data = JSON.parse(document.getElementById('dashboard-data').textContent) || {}; } catch (e) { data = {}; }
+  if (data.sample && !Array.isArray(data.daily)) data = makeSample(data.brand || 'Northwind Tools');
+
+  function arr(v) { return Array.isArray(v) ? v : []; }
+  function obj(v) { return v && typeof v === 'object' && !Array.isArray(v) ? v : {}; }
+  function toMs(d) { return Date.parse(d + 'T00:00:00Z'); }
+  function key(ms) { return new Date(ms).toISOString().slice(0, 10); }
+  function addDays(d, n) { return key(toMs(d) + n * DAY); }
+  function isDay(d) { return typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d) && !isNaN(toMs(d)); }
+  function nice(d) { return isDay(d) ? new Date(toMs(d)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }) : ''; }
+  function niceY(d) { return isDay(d) ? new Date(toMs(d)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : ''; }
+  function range(w) { return w ? nice(w.from) + ' to ' + niceY(w.to) : ''; }
+  function num(v) { return typeof v === 'number' && isFinite(v) ? Math.round(v).toLocaleString('en-US') : '–'; }
+  function pctText(f) { return typeof f === 'number' && isFinite(f) ? (f * 100).toFixed(1) + '%' : '–'; }
+  function posText(p) { return typeof p === 'number' && isFinite(p) && p > 0 ? p.toFixed(1) : '–'; }
+  function el(tag, attrs, text) { var n = document.createElement(tag); if (attrs) for (var k in attrs) n.setAttribute(k, attrs[k]); if (text != null) n.textContent = String(text); return n; }
+  function sv(tag, attrs) { var n = document.createElementNS(NS, tag); for (var k in attrs) n.setAttribute(k, attrs[k]); return n; }
+  function svText(x, y, text, attrs) { var t = sv('text', Object.assign({ x: x, y: y, fill: color('--muted'), 'font-size': 13 }, attrs || {})); t.textContent = text; return t; }
+  function color(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#888'; }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function fit(text, max) { text = String(text); return text.length > max ? text.slice(0, max - 1).trimEnd() + '…' : text; }
+  function byId(id) { return document.getElementById(id); }
+  function niceMax(v) {
+    if (!(v > 0)) return 1;
+    var pow = Math.pow(10, Math.floor(Math.log10(v))), n = v / pow;
+    return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * pow;
+  }
+  function axisText(v, metric) {
+    if (metric === 'ctr') return (v * 100).toFixed(v < 0.1 ? 1 : 0) + '%';
+    if (metric === 'position') return v.toFixed(1);
+    return v >= 10 || v === Math.round(v) ? num(v) : v.toFixed(1);
+  }
+
+  function series(v, len) {
+    return arr(v).filter(function (r) { return Array.isArray(r) && r.length >= len && isDay(r[0]); }).sort(function (a, b) { return a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0; });
+  }
+  var brand = String(data.brand || 'Your site');
+  var property = String(data.property || '');
+  var daily = series(data.daily, 3), brandWindows = obj(data.brandWindows);
+  function pair(v) { v = arr(v); return [typeof v[0] === 'number' ? v[0] : null, typeof v[1] === 'number' ? v[1] : null]; }
+  var today = key(Date.now());
+  var first = daily.length ? daily[0][0] : today;
+  var last = daily.length ? daily[daily.length - 1][0] : today;
+  var changed = obj(data.changed), work = obj(data.work), ai = obj(data.ai);
+  var todoItems = arr(data.todo).filter(function (t) { return t && typeof t === 'object'; });
+  var brandTerms = arr(data.brandTerms).map(function (t) { return squash(t); }).filter(Boolean);
+  function squash(s) { return String(s || '').toLowerCase().replace(/[\s\-_.'’]/g, ''); }
+  function isBrand(q) { var s = squash(q); return brandTerms.some(function (t) { return s.indexOf(t) !== -1; }); }
+
+  var startDays = [7, 28, 90].indexOf(+data.mainDays) !== -1 ? +data.mainDays : 7;
+  var state = { days: startDays, compare: true, avg: true, metric: 'clicks', tab: 'overview', ai: 'all' };
+
+  function win() { return { from: addDays(last, -(state.days - 1)), to: last }; }
+  function before() { var w = win(), p = { from: addDays(w.from, -state.days), to: addDays(w.from, -1) }; return p.from >= first ? p : null; }
+  function total(rows, a, b) {
+    var t = { c: 0, i: 0, pw: 0, n: 0 };
+    rows.forEach(function (r) {
+      if (r[0] < a || r[0] > b) return;
+      var c = +r[1] || 0, i = +r[2] || 0;
+      t.c += c; t.i += i; t.pw += (+r[3] || 0) * i; t.n += 1;
+    });
+    return t;
+  }
+  function ctrOf(t) { return t.i > 0 ? t.c / t.i : null; }
+  function posOf(t) { return t.i > 0 && t.pw > 0 ? t.pw / t.i : null; }
+
+  var tip = byId('tip');
+  function showTip(evt, lines) {
+    clear(tip);
+    lines.forEach(function (l, i) { tip.appendChild(el(i ? 'div' : 'b', null, l)); });
+    tip.hidden = false;
+    var w = tip.offsetWidth, h = tip.offsetHeight;
+    var x = evt.clientX + 14, y = evt.clientY + 14;
+    if (x + w > window.innerWidth - 8) x = evt.clientX - w - 14;
+    if (y + h > window.innerHeight - 8) y = evt.clientY - h - 14;
+    tip.style.left = Math.max(8, x) + 'px'; tip.style.top = Math.max(8, y) + 'px';
+  }
+  function hideTip() { tip.hidden = true; }
+  function hover(node, lines) {
+    node.addEventListener('pointermove', function (e) { showTip(e, typeof lines === 'function' ? lines() : lines); });
+    node.addEventListener('pointerdown', function (e) { showTip(e, typeof lines === 'function' ? lines() : lines); });
+    node.addEventListener('pointerleave', hideTip);
+  }
+
+  var statusBox = byId('status'), statusTimer = null;
+  function say(text) { statusBox.textContent = text; statusBox.hidden = false; clearTimeout(statusTimer); statusTimer = setTimeout(function () { statusBox.hidden = true; }, 5000); }
+
+  function table(headers, rows) {
+    var t = el('table'), thead = el('thead'), hr = el('tr'), tbody = el('tbody');
+    headers.forEach(function (h) { var th = el('th', null, h.t); if (h.n) th.className = 'n'; hr.appendChild(th); });
+    thead.appendChild(hr); t.appendChild(thead);
+    rows.forEach(function (r) {
+      var tr = el('tr');
+      r.forEach(function (c, i) { var td = el('td', null, c == null ? '' : c); if (headers[i] && headers[i].n) td.className = 'n'; tr.appendChild(td); });
+      tbody.appendChild(tr);
+    });
+    t.appendChild(tbody);
+    return t;
+  }
+  function fill(id, headers, rows, emptyText) {
+    var box = byId(id); clear(box);
+    if (!rows.length) { box.appendChild(el('p', { 'class': 'empty' }, emptyText)); return; }
+    box.appendChild(table(headers, rows));
+  }
+
+  function renderHead() {
+    byId('title').textContent = 'Google Search report: ' + (property || brand);
+    if (data.sample) byId('title').appendChild(el('span', { 'class': 'badge' }, 'Sample data'));
+    byId('subtitle').textContent = daily.length ? 'Web search, final Search Console data up to ' + niceY(last) + '.' : 'No daily numbers in this file.';
+    byId('generated').textContent = data.generatedAt ? 'Made on ' + niceY(String(data.generatedAt)) : '';
+    var box = byId('short'); clear(box);
+    var lines = arr(data.summary).filter(function (s) { return typeof s === 'string' && s; });
+    byId('short-card').hidden = !lines.length;
+    lines.forEach(function (s) { box.appendChild(el('li', null, s)); });
+    var notes = byId('notes'); clear(notes);
+    arr(data.notes).forEach(function (n) { if (typeof n === 'string' && n) notes.appendChild(el('li', null, n)); });
+    byId('tab-todo').textContent = 'To-do list' + (todoItems.length ? ' (' + todoItems.length + ')' : '');
+  }
+
+  function renderControls() {
+    document.querySelectorAll('[data-days]').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.days === state.days)); });
+    document.querySelectorAll('[data-metric]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.metric === state.metric)); });
+    document.querySelectorAll('[data-ai]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.ai === state.ai)); });
+    byId('compare').checked = state.compare;
+    byId('avg').checked = state.avg;
+    byId('avg-wrap').hidden = state.days <= 7;
+  }
+
+  function renderTiles() {
+    var box = byId('tiles'); clear(box);
+    var w = win(), p = state.compare ? before() : null;
+    var now = total(daily, w.from, w.to), was = p ? total(daily, p.from, p.to) : null;
+    var none = state.compare ? { t: 'No earlier days in this file', c: '' } : null;
+    function countDelta(a, b) {
+      if (!was) return none;
+      var d = a - b;
+      if (!d) return { t: 'The same as ' + range(p), c: '' };
+      var t = num(Math.abs(d)) + (d > 0 ? ' more' : ' fewer');
+      if (b >= 20) t += ' (' + Math.round(Math.abs(d) / b * 100) + '%)';
+      return { t: t + ' than ' + range(p), c: b >= 20 && Math.abs(d) / b >= 0.1 ? (d > 0 ? 'up' : 'down') : '' };
+    }
+    function ctrDelta() {
+      if (!was) return none;
+      var a = ctrOf(now), b = ctrOf(was);
+      if (a === null || b === null) return { t: 'No impressions before', c: '' };
+      var d = (a - b) * 100;
+      return { t: (Math.abs(d) < 0.05 ? 'The same as ' : Math.abs(d).toFixed(1) + (d > 0 ? ' points higher than ' : ' points lower than ')) + range(p), c: '' };
+    }
+    function posDelta() {
+      if (!was) return none;
+      var a = posOf(now), b = posOf(was);
+      if (a === null || b === null) return { t: 'No impressions before', c: '' };
+      var d = a - b;
+      return { t: 'Was ' + posText(b) + ' from ' + range(p) + (Math.abs(d) >= 0.05 ? (d > 0 ? ': ranks lower' : ': ranks higher') : ''), c: Math.abs(d) >= 1 ? (d > 0 ? 'down' : 'up') : '' };
+    }
+    var tiles = [
+      { k: 'Clicks', v: num(now.c), d: countDelta(now.c, was && was.c) },
+      { k: 'Impressions', v: num(now.i), d: countDelta(now.i, was && was.i) },
+      { k: 'CTR', v: pctText(ctrOf(now)), d: ctrDelta() },
+      { k: 'Average position (lower is better)', v: posText(posOf(now)), d: posDelta() }
+    ];
+    tiles.forEach(function (x) {
+      var c = el('div', { 'class': 'card tile' });
+      c.appendChild(el('div', { 'class': 'k' }, x.k));
+      c.appendChild(el('div', { 'class': 'v' }, x.v));
+      c.appendChild(el('div', { 'class': 'd' }, range(w)));
+      if (x.d) c.appendChild(el('div', { 'class': 'd ' + x.d.c }, x.d.t));
+      box.appendChild(c);
+    });
+  }
+
+  var METRIC = { clicks: 'Clicks', impressions: 'Impressions', ctr: 'CTR', position: 'Average position' };
+  function metricOf(t, m) {
+    if (m === 'clicks') return t.n ? t.c / t.n : null;
+    if (m === 'impressions') return t.n ? t.i / t.n : null;
+    if (m === 'ctr') return ctrOf(t);
+    return posOf(t);
+  }
+  function metricText(v, m) {
+    if (v === null) return '–';
+    if (m === 'ctr') return pctText(v);
+    if (m === 'position') return posText(v);
+    return v === Math.round(v) ? num(v) : v.toFixed(1);
+  }
+  function trendPoints() {
+    var w = win(), p = state.compare ? before() : null, k = state.avg && state.days > 7 ? 7 : 1, pts = [];
+    for (var n = 0; n < state.days; n++) {
+      var day = addDays(w.from, n), bDay = p ? addDays(p.from, n) : null;
+      pts.push({
+        day: day, bDay: bDay,
+        raw: metricOf(total(daily, day, day), state.metric),
+        v: metricOf(total(daily, addDays(day, -(k - 1)), day), state.metric),
+        bRaw: bDay ? metricOf(total(daily, bDay, bDay), state.metric) : null,
+        bv: bDay ? metricOf(total(daily, addDays(bDay, -(k - 1)), bDay), state.metric) : null
+      });
+    }
+    return { pts: pts, k: k, before: p };
+  }
+  function renderTrend() {
+    var box = byId('trend'); clear(box);
+    var m = state.metric, t = trendPoints(), pts = t.pts, w = win();
+    byId('trend-title').textContent = METRIC[m] + ' by day' + (m === 'position' ? ' (lower is better)' : '');
+    byId('trend-dates').textContent = range(w) + (t.before ? ', against ' + range(t.before) : '') + (t.k > 1 ? '. Lines show the 7-day average.' : '.');
+    byId('trend-legend-before').hidden = !t.before;
+    var vals = [];
+    pts.forEach(function (p) { if (p.v !== null) vals.push(p.v); if (p.bv !== null) vals.push(p.bv); });
+    if (vals.length < 2) { box.appendChild(el('p', { 'class': 'empty' }, 'Not enough days with data in this period to draw a line.')); return; }
+    var W = 760, H = 280, L = 56, R = 14, T = 12, B = 30, hi = niceMax(Math.max.apply(null, vals)), lo = m === 'position' ? 1 : 0;
+    if (m === 'position' && hi <= 1) hi = 2;
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': METRIC[m] + ' by day', 'font-family': 'system-ui, sans-serif', 'data-chart': 'trend' });
+    function y(v) { var f = (v - lo) / (hi - lo); f = Math.max(0, Math.min(1, f)); return m === 'position' ? T + (H - T - B) * f : T + (H - T - B) * (1 - f); }
+    function x(n) { return pts.length === 1 ? (L + W - R) / 2 : L + (W - L - R) * n / (pts.length - 1); }
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (f) {
+      var v = lo + (hi - lo) * f, yy = y(v);
+      svg.appendChild(sv('line', { x1: L, x2: W - R, y1: yy, y2: yy, stroke: color('--line') }));
+      svg.appendChild(svText(L - 6, yy + 4, axisText(v, m), { 'text-anchor': 'end' }));
+    });
+    function line(field, stroke, dash) {
+      var d = '', pen = false;
+      pts.forEach(function (p, n) {
+        if (p[field] === null) { pen = false; return; }
+        d += (pen ? 'L' : 'M') + x(n).toFixed(1) + ' ' + y(p[field]).toFixed(1) + ' ';
+        pen = true;
+      });
+      var attrs = { d: d.trim(), fill: 'none', stroke: stroke, 'stroke-width': dash ? 2 : 2.5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' };
+      if (dash) attrs['stroke-dasharray'] = '5 5';
+      if (d) svg.appendChild(sv('path', attrs));
+    }
+    if (t.before) line('bv', color('--rival'), true);
+    line('v', color('--brand'), false);
+    if (pts.length <= 31) pts.forEach(function (p, n) { if (p.v !== null) svg.appendChild(sv('circle', { cx: x(n), cy: y(p.v), r: 3, fill: color('--brand') })); });
+    var ticks = Math.min(7, pts.length), lastX = -999;
+    for (var i = 0; i < ticks; i++) {
+      var n = Math.round(i * (pts.length - 1) / Math.max(1, ticks - 1)), px = x(n);
+      if (px - lastX < 70) continue;
+      lastX = px;
+      svg.appendChild(svText(px, H - 8, nice(pts[n].day), { 'text-anchor': px > W - R - 30 ? 'end' : px < L + 30 ? 'start' : 'middle' }));
+    }
+    var cross = sv('line', { y1: T, y2: H - B, stroke: color('--muted'), 'stroke-dasharray': '3 3', visibility: 'hidden', 'data-ui': '1' });
+    svg.appendChild(cross);
+    var hit = sv('rect', { x: L, y: T, width: W - L - R, height: H - T - B, fill: 'transparent', 'data-ui': '1' });
+    svg.appendChild(hit);
+    function move(evt) {
+      var r = svg.getBoundingClientRect(), mx = (evt.clientX - r.left) * (W / r.width), best = 0, bd = Infinity;
+      pts.forEach(function (p, n) { var d = Math.abs(x(n) - mx); if (d < bd) { bd = d; best = n; } });
+      var p = pts[best];
+      cross.setAttribute('x1', x(best)); cross.setAttribute('x2', x(best)); cross.setAttribute('visibility', 'visible');
+      var lines = [niceY(p.day), METRIC[m] + ': ' + metricText(p.raw, m)];
+      if (t.k > 1) lines.push('7-day average: ' + metricText(p.v, m));
+      if (p.bDay) lines.push(niceY(p.bDay) + ': ' + metricText(p.bRaw, m) + (t.k > 1 ? ' (7-day average ' + metricText(p.bv, m) + ')' : ''));
+      showTip(evt, lines);
+    }
+    hit.addEventListener('pointermove', move);
+    hit.addEventListener('pointerdown', move);
+    hit.addEventListener('pointerleave', function () { cross.setAttribute('visibility', 'hidden'); hideTip(); });
+    box.appendChild(svg);
+  }
+
+  function renderBrand() {
+    var card = byId('brand-card'), box = byId('brand'); clear(box);
+    var bw = obj(brandWindows[String(state.days)]), bp = pair(bw.brand), op = pair(bw.other);
+    card.hidden = bp[0] === null || op[0] === null;
+    if (card.hidden) return;
+    var w = win(), p = state.compare ? before() : null;
+    if (p && (bp[1] === null || op[1] === null)) p = null;
+    byId('brand-dates').textContent = range(w) + (p ? ', against ' + range(p) : '') + '.';
+    byId('brand-note').textContent = (arr(data.brandTerms).length ? 'Counted as brand: ' + arr(data.brandTerms).join(', ') + '. ' : '') + 'Google does not list rare searches, so they cannot be sorted into brand or non-brand.';
+    function parts(win, label, n) {
+      var all = total(daily, win.from, win.to).c, b = bp[n], o = op[n];
+      return { label: label, dates: range(win), all: all, parts: [['Searches that name the brand', b, '--brand'], ['All other searches', o, '--cite'], ['Rare searches Google does not list', Math.max(0, all - b - o), '--rival']] };
+    }
+    var rows = [parts(w, 'This period', 0)];
+    if (p) rows.push(parts(p, 'Period before', 1));
+    var max = Math.max.apply(null, rows.map(function (r) { return r.parts[0][1] + r.parts[1][1] + r.parts[2][1]; }));
+    if (!(max > 0)) { box.appendChild(el('p', { 'class': 'empty' }, 'No clicks in this period.')); return; }
+    var W = 760, L = 130, R = 90, rowH = 46, H = rows.length * rowH + 8;
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Clicks from brand and non-brand searches', 'font-family': 'system-ui, sans-serif', 'data-chart': 'brand' });
+    rows.forEach(function (r, n) {
+      var y = 8 + n * rowH, x = L, sum = 0;
+      svg.appendChild(svText(0, y + 19, r.label, { fill: color('--ink') }));
+      r.parts.forEach(function (s) {
+        var wd = (W - L - R) * s[1] / max;
+        sum += s[1];
+        if (wd <= 0) return;
+        var rect = sv('rect', { x: x, y: y, width: Math.max(1, wd), height: 28, fill: color(s[2]) });
+        hover(rect, [s[0], num(s[1]) + ' clicks' + (r.all > 0 ? ' (' + Math.round(s[1] / r.all * 100) + '% of ' + num(r.all) + ')' : ''), r.dates]);
+        svg.appendChild(rect);
+        x += wd;
+      });
+      svg.appendChild(svText(x + 8, y + 19, num(sum) + ' clicks', { fill: color('--ink') }));
+    });
+    box.appendChild(svg);
+  }
+
+  function changeRows(list) {
+    return arr(list).filter(function (r) { return r && typeof r === 'object' && typeof r.name === 'string'; }).map(function (r) {
+      var c = +r.clicks || 0, b = +r.before || 0;
+      return { name: r.name, clicks: c, before: b, d: c - b, moved: String(r.moved || ''), brand: !!r.brand };
+    }).sort(function (a, b) { return a.d - b.d; });
+  }
+  function renderChange(id, list, noun) {
+    var box = byId(id), tbox = byId(id + '-table'); clear(box); clear(tbox);
+    var rows = changeRows(list);
+    if (!rows.length) { box.appendChild(el('p', { 'class': 'empty' }, 'No ' + noun + ' with a change large enough to list.')); return; }
+    var max = Math.max.apply(null, rows.map(function (r) { return Math.abs(r.d); })) || 1;
+    var W = 760, L = 290, R = 70, rowH = 30, H = rows.length * rowH + 8, zero = L + (W - L - R) / 2, half = (W - L - R) / 2;
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Change in clicks', 'font-family': 'system-ui, sans-serif', 'data-chart': id });
+    svg.appendChild(sv('line', { x1: zero, x2: zero, y1: 2, y2: H - 2, stroke: color('--line') }));
+    rows.forEach(function (r, n) {
+      var y = 6 + n * rowH, wd = Math.max(1, half * Math.abs(r.d) / max), down = r.d < 0;
+      svg.appendChild(svText(0, y + 15, fit(r.name + (r.brand ? ' (brand)' : ''), 40), { fill: color('--ink') }));
+      svg.appendChild(sv('rect', { x: down ? zero - wd : zero, y: y, width: wd, height: 20, rx: 3, fill: color(down ? '--bad' : '--good') }));
+      svg.appendChild(svText(down ? zero - wd - 6 : zero + wd + 6, y + 15, num(Math.abs(r.d)) + (down ? ' fewer' : ' more'), { 'text-anchor': down ? 'end' : 'start' }));
+      var hit = sv('rect', { x: 0, y: y - 4, width: W, height: rowH, fill: 'transparent', 'data-ui': '1' });
+      hover(hit, [r.name, num(r.clicks) + ' clicks, ' + num(r.before) + ' before', r.moved].filter(Boolean));
+      svg.appendChild(hit);
+    });
+    box.appendChild(svg);
+    tbox.appendChild(table([{ t: noun === 'searches' ? 'Search' : 'Page' }, { t: 'Clicks', n: 1 }, { t: 'Before', n: 1 }, { t: 'Which number moved' }],
+      rows.map(function (r) { return [r.name + (r.brand ? ' (brand)' : ''), num(r.clicks), num(r.before), r.moved]; })));
+  }
+  function renderChanged() {
+    var dates = isDay(changed.from) ? range({ from: changed.from, to: changed.to }) + (isDay(changed.beforeFrom) ? ', against ' + range({ from: changed.beforeFrom, to: changed.beforeTo }) : '') + '.' : '';
+    document.querySelectorAll('[data-changed-dates]').forEach(function (n) { n.textContent = dates; });
+    renderChange('changed-searches', changed.searches, 'searches');
+    renderChange('changed-pages', changed.pages, 'pages');
+    byId('changed-note').textContent = String(changed.note || '');
+  }
+
+  var workPages = arr(work.pages);
+  var workRows = arr(work.rows).filter(function (r) { return Array.isArray(r) && r.length >= 5 && typeof r[0] === 'string'; }).map(function (r) {
+    var c = +r[2] || 0, i = +r[3] || 0;
+    return { q: r[0], p: String(typeof r[1] === 'number' && workPages[r[1]] != null ? workPages[r[1]] : r[1]), c: c, i: i, pos: +r[4] || 0, ctr: i > 0 ? c / i : 0, brand: isBrand(r[0]) };
+  });
+  var plain = workRows.filter(function (r) { return !r.brand && r.pos > 0 && r.i > 0; });
+  function median(list) { if (!list.length) return null; var s = list.slice().sort(function (a, b) { return a - b; }), h = Math.floor(s.length / 2); return s.length % 2 ? s[h] : (s[h - 1] + s[h]) / 2; }
+  var pageOne = plain.filter(function (r) { return r.pos <= 10 && r.i >= 100; });
+  var middleCtr = median(pageOne.map(function (r) { return r.ctr; }));
+  var notClicked = pageOne.filter(function (r) { return r.ctr <= middleCtr; }).sort(function (a, b) { return b.i - a.i; }).slice(0, 5);
+  function offPageOne() {
+    var map = {}, order = [];
+    plain.filter(function (r) { return r.pos > 10 && r.pos <= 20 && r.i >= 10; }).forEach(function (r) {
+      if (!map[r.p]) { map[r.p] = { page: r.p, sum: 0, rows: [] }; order.push(map[r.p]); }
+      map[r.p].sum += r.i; map[r.p].rows.push(r);
+    });
+    return order.sort(function (a, b) { return b.sum - a.sum; }).slice(0, 5).map(function (g) {
+      g.rows = g.rows.sort(function (a, b) { return b.i - a.i; }).slice(0, 3);
+      return g;
+    });
+  }
+  function twoPages() {
+    var map = {}, order = [];
+    plain.forEach(function (r) {
+      if (!map[r.q]) { map[r.q] = { q: r.q, sum: 0, rows: [] }; order.push(map[r.q]); }
+      map[r.q].sum += r.i; map[r.q].rows.push(r);
+    });
+    return order.map(function (g) {
+      g.rows = g.rows.filter(function (r) { return r.i >= 10 && r.i >= g.sum * 0.1; }).sort(function (a, b) { return b.i - a.i; });
+      return g;
+    }).filter(function (g) { return g.rows.length >= 2; }).sort(function (a, b) { return b.sum - a.sum; }).slice(0, 5);
+  }
+
+  function renderScatter() {
+    var box = byId('scatter'); clear(box);
+    var pts = plain.filter(function (r) { return r.pos <= 20; });
+    if (pts.length < 3) { box.appendChild(el('p', { 'class': 'empty' }, 'Not enough searches in the top 20 positions to draw this chart.')); return; }
+    var W = 760, H = 330, L = 56, R = 14, T = 14, B = 44;
+    var hi = niceMax(Math.max.apply(null, pts.map(function (r) { return r.ctr; })) || 0.01), maxI = Math.max.apply(null, pts.map(function (r) { return r.i; }));
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Position and CTR of your top searches', 'font-family': 'system-ui, sans-serif', 'data-chart': 'scatter' });
+    function x(pos) { return L + (W - L - R) * (pos - 1) / 19; }
+    function y(v) { return T + (H - T - B) * (1 - Math.min(1, v / hi)); }
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (f) {
+      var yy = y(hi * f);
+      svg.appendChild(sv('line', { x1: L, x2: W - R, y1: yy, y2: yy, stroke: color('--line') }));
+      svg.appendChild(svText(L - 6, yy + 4, axisText(hi * f, 'ctr'), { 'text-anchor': 'end' }));
+    });
+    [1, 5, 10, 15, 20].forEach(function (pos) { svg.appendChild(svText(x(pos), H - B + 18, String(pos), { 'text-anchor': 'middle' })); });
+    svg.appendChild(svText((L + W - R) / 2, H - 6, 'Average position in Google Search', { 'text-anchor': 'middle' }));
+    svg.appendChild(sv('line', { x1: x(10.5), x2: x(10.5), y1: T, y2: H - B, stroke: color('--muted'), 'stroke-dasharray': '4 4' }));
+    svg.appendChild(svText(x(10.5) - 6, T + 12, 'Page one', { 'text-anchor': 'end' }));
+    svg.appendChild(svText(x(10.5) + 6, T + 12, 'Page two'));
+    pts.slice().sort(function (a, b) { return b.i - a.i; }).forEach(function (r) {
+      var flagged = notClicked.indexOf(r) !== -1;
+      var dot = sv('circle', { cx: x(r.pos), cy: y(r.ctr), r: (3 + 11 * Math.sqrt(r.i / maxI)).toFixed(1), fill: color(flagged ? '--cite' : '--brand'), 'fill-opacity': flagged ? 0.85 : 0.5, stroke: color('--card'), 'stroke-width': 1 });
+      hover(dot, [r.q, r.p, 'Position ' + posText(r.pos) + ', CTR ' + pctText(r.ctr), num(r.i) + ' impressions, ' + num(r.c) + ' clicks']);
+      svg.appendChild(dot);
+    });
+    box.appendChild(svg);
+  }
+
+  function renderBands() {
+    var box = byId('bands'); clear(box);
+    var bands = [['Positions 1 to 3', 0, 3], ['Positions 4 to 10', 3, 10], ['Positions 11 to 20', 10, 20], ['Position 21 and lower', 20, Infinity]].map(function (b) {
+      var t = { label: b[0], i: 0, c: 0, n: 0 };
+      plain.forEach(function (r) { if (r.pos > b[1] && r.pos <= b[2]) { t.i += r.i; t.c += r.c; t.n += 1; } });
+      return t;
+    });
+    var sumI = bands.reduce(function (s, b) { return s + b.i; }, 0), sumC = bands.reduce(function (s, b) { return s + b.c; }, 0);
+    if (!(sumI > 0)) { box.appendChild(el('p', { 'class': 'empty' }, 'No searches to place by position.')); byId('bands-note').textContent = ''; return; }
+    var W = 760, L = 190, R = 70, rowH = 54, H = bands.length * rowH + 4;
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Impressions and clicks by position', 'font-family': 'system-ui, sans-serif', 'data-chart': 'bands' });
+    bands.forEach(function (b, n) {
+      var y = 4 + n * rowH, fi = b.i / sumI, fc = sumC > 0 ? b.c / sumC : 0;
+      svg.appendChild(svText(0, y + 26, b.label, { fill: color('--ink') }));
+      [[fi, '--cite', num(b.i) + ' impressions'], [fc, '--brand', num(b.c) + ' clicks']].forEach(function (s, k) {
+        var yy = y + 4 + k * 21, wd = Math.max(1, (W - L - R) * s[0]);
+        var rect = sv('rect', { x: L, y: yy, width: wd, height: 17, rx: 3, fill: color(s[1]) });
+        hover(rect, [b.label, s[2] + ' (' + Math.round(s[0] * 100) + '%)', b.n + ' searches with their pages']);
+        svg.appendChild(rect);
+        svg.appendChild(svText(L + wd + 6, yy + 13, Math.round(s[0] * 100) + '%'));
+      });
+    });
+    box.appendChild(svg);
+    byId('bands-note').textContent = 'Shares of the ' + num(plain.length) + ' most-shown searches with their pages, brand searches left out: ' + num(sumI) + ' impressions and ' + num(sumC) + ' clicks.';
+  }
+
+  function renderWork() {
+    var dates = isDay(work.from) ? range({ from: work.from, to: work.to }) + '.' : '';
+    document.querySelectorAll('[data-work-dates]').forEach(function (n) { n.textContent = dates; });
+    renderScatter(); renderBands();
+    fill('not-clicked', [{ t: 'Search' }, { t: 'Page' }, { t: 'Position', n: 1 }, { t: 'Impressions', n: 1 }, { t: 'Clicks', n: 1 }, { t: 'CTR', n: 1 }],
+      notClicked.map(function (r) { return [r.q, r.p, posText(r.pos), num(r.i), num(r.c), pctText(r.ctr)]; }), 'No search on page one with 100 or more impressions.');
+    var zero = pageOne.filter(function (r) { return r.c === 0; }).length;
+    byId('not-clicked-note').textContent = notClicked.length ? (middleCtr > 0 ? 'The middle CTR of the ' + pageOne.length + ' searches on page one with 100 or more impressions is ' + pctText(middleCtr) + '.' : zero + ' of the ' + pageOne.length + ' searches on page one with 100 or more impressions got no clicks.') + ' What can be checked: whether the results page itself answers the search (an AI answer, a definition box, a results box) and whether the title matches what the searcher wants. Search Console does not say which.' : '';
+    var off = [];
+    offPageOne().forEach(function (g) { g.rows.forEach(function (r, n) { off.push([n ? '' : g.page, r.q, posText(r.pos), num(r.i)]); }); });
+    fill('off-page-one', [{ t: 'Page' }, { t: 'Search' }, { t: 'Position', n: 1 }, { t: 'Impressions', n: 1 }], off, 'No search at positions 11 to 20 with 10 or more impressions.');
+    var two = [];
+    twoPages().forEach(function (g) { g.rows.forEach(function (r, n) { two.push([n ? '' : g.q, r.p, posText(r.pos), num(r.i), num(r.c)]); }); });
+    fill('two-pages', [{ t: 'Search' }, { t: 'Page' }, { t: 'Position', n: 1 }, { t: 'Impressions', n: 1 }, { t: 'Clicks', n: 1 }], two, 'No search shows two of your pages.');
+    var STATUS = { none: 'No page answers it', partly: 'Partly', answered: 'Answered', unknown: 'Not checked' };
+    fill('questions', [{ t: 'Question' }, { t: 'Impressions', n: 1 }, { t: 'Position', n: 1 }, { t: 'On the site' }],
+      arr(work.questions).filter(function (q) { return q && typeof q.question === 'string'; }).map(function (q) {
+        var s = STATUS[q.status] || '';
+        return [q.question, num(+q.impressions), posText(+q.position), q.page ? s + ': ' + q.page : s];
+      }), 'No question searches to list.');
+    byId('questions-note').textContent = isDay(work.crawlDate) ? 'Checked against the crawl of your site from ' + niceY(work.crawlDate) + '.' : '';
+    byId('lost-dates').textContent = isDay(work.from) ? range({ from: work.from, to: work.to }) + (isDay(work.beforeFrom) ? ', against ' + range({ from: work.beforeFrom, to: work.beforeTo }) : '') + '.' : '';
+    fill('lost-pages', [{ t: 'Page' }, { t: 'Clicks', n: 1 }, { t: 'Before', n: 1 }, { t: 'Which number moved' }, { t: 'Search that lost the most' }],
+      arr(work.lostPages).filter(function (r) { return r && typeof r.page === 'string'; }).map(function (r) { return [r.page, num(+r.clicks), num(+r.before), String(r.moved || ''), String(r.search || '')]; }),
+      'No page lost 20% or more of its clicks.');
+  }
+
+  function renderAi() {
+    var box = byId('ai'); clear(box);
+    var tracked = ai.tracked !== false && arr(ai.pages).length > 0;
+    byId('ai-seg').hidden = !tracked; byId('ai-legend').hidden = !tracked;
+    document.querySelector('[data-png="ai"]').hidden = !tracked;
+    if (!tracked) {
+      byId('ai-dates').textContent = '';
+      box.appendChild(el('p', { 'class': 'empty' }, 'Search Console does not show which searches got an AI answer or which of your pages the AI engines cite. Hi, Moose records that for the prompts you track; add prompts on the Visibility screen in the Hi, Moose app and this part fills in after the first run.'));
+      byId('ai-note').textContent = '';
+      return;
+    }
+    byId('ai-dates').textContent = 'From ' + num(+ai.answers) + ' stored AI answers to ' + num(+ai.prompts) + ' tracked prompts, ' + range({ from: ai.from, to: ai.to }) + '. These cover the prompts ' + brand + ' tracks in Hi, Moose, not the whole of AI search.';
+    byId('ai-note').textContent = String(ai.note || '');
+    var rows = arr(ai.pages).filter(function (r) { return r && typeof r.page === 'string'; }).map(function (r) {
+      var clicks = typeof r.clicks === 'number' ? r.clicks : null, answers = +r.answers || 0;
+      return { page: r.page, clicks: clicks, answers: answers, engines: arr(r.engines), group: answers > 0 && clicks !== null ? 'both' : answers > 0 ? 'ai' : 'google' };
+    }).filter(function (r) { return state.ai === 'all' || r.group === state.ai; });
+    rows.sort(function (a, b) { return state.ai === 'ai' ? b.answers - a.answers : (b.clicks || 0) - (a.clicks || 0) || b.answers - a.answers; });
+    rows = rows.slice(0, 15);
+    if (!rows.length) { box.appendChild(el('p', { 'class': 'empty' }, 'No pages in this group.')); return; }
+    var maxC = Math.max.apply(null, rows.map(function (r) { return r.clicks || 0; })) || 1, maxA = Math.max.apply(null, rows.map(function (r) { return r.answers; })) || 1;
+    var W = 760, L = 300, mid = 520, rowH = 30, H = rows.length * rowH + 26, barC = mid - L - 70, barA = W - mid - 60;
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Your pages in Google Search and in AI answers', 'font-family': 'system-ui, sans-serif', 'data-chart': 'ai' });
+    svg.appendChild(svText(L, 14, 'Google clicks'));
+    svg.appendChild(svText(mid, 14, 'Stored AI answers that cite it'));
+    rows.forEach(function (r, n) {
+      var y = 26 + n * rowH;
+      svg.appendChild(svText(0, y + 15, fit(r.page, 42), { fill: color('--ink') }));
+      if (r.clicks === null) svg.appendChild(svText(L, y + 15, 'Not among the top pages'));
+      else {
+        var wc = Math.max(1, barC * r.clicks / maxC);
+        svg.appendChild(sv('rect', { x: L, y: y, width: wc, height: 20, rx: 3, fill: color('--brand') }));
+        svg.appendChild(svText(L + wc + 6, y + 15, num(r.clicks)));
+      }
+      if (r.answers > 0) {
+        var wa = Math.max(1, barA * r.answers / maxA);
+        svg.appendChild(sv('rect', { x: mid, y: y, width: wa, height: 20, rx: 3, fill: color('--cite') }));
+        svg.appendChild(svText(mid + wa + 6, y + 15, num(r.answers)));
+      } else svg.appendChild(svText(mid, y + 15, 'Not cited'));
+      var hit = sv('rect', { x: 0, y: y - 4, width: W, height: rowH, fill: 'transparent', 'data-ui': '1' });
+      hover(hit, [r.page, r.clicks === null ? 'Not among the top Google pages' : num(r.clicks) + ' Google clicks', r.answers > 0 ? 'Cited in ' + num(r.answers) + ' stored AI answers' : 'Not cited in the stored answers', r.engines.join(', ')].filter(Boolean));
+      svg.appendChild(hit);
+    });
+    box.appendChild(svg);
+  }
+
+  function renderTodo() {
+    var box = byId('todo'); clear(box);
+    if (!todoItems.length) { box.appendChild(el('p', { 'class': 'empty' }, 'No to-do items in this report.')); byId('todo-note').textContent = ''; return; }
+    todoItems.forEach(function (t, n) {
+      var d = el('div', { 'class': 'todo' });
+      d.appendChild(el('h3', null, (n + 1) + '. ' + String(t.title || '')));
+      if (t.next) d.appendChild(el('p', null, 'Next: ' + t.next));
+      if (t.takes) d.appendChild(el('p', { 'class': 'takes' }, String(t.takes)));
+      if (t.ask) {
+        var b = el('button', { 'class': 'btn small no-print', style: 'margin-top:6px' }, 'Copy request');
+        b.addEventListener('click', function () { copyText(String(t.ask)); });
+        d.appendChild(b);
+      }
+      box.appendChild(d);
+    });
+    byId('todo-note').textContent = 'Each Hi, Moose step is a run on your Hi, Moose plan and is made only when you ask for it. Copy a request and paste it into Claude or ChatGPT with Hi, Moose connected.';
+  }
+
+  function renderOverview() { renderControls(); renderTiles(); renderTrend(); renderBrand(); }
+  function render() { renderHead(); renderOverview(); renderChanged(); renderWork(); renderAi(); renderTodo(); }
+
+  function csvCell(v) { var s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+  function download(name, blob) {
+    try {
+      var url = URL.createObjectURL(blob), a = el('a', { href: url, download: name });
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+      say('Saved ' + name);
+    } catch (e) { say('This viewer blocked the download. Open the file in a web browser to save it.'); }
+  }
+  function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  function fileBase() { return 'google-search-report-' + slug(property || brand) + '-' + last; }
+  function copyText(text) {
+    var done = 'Copied. Paste it into Claude or ChatGPT with Hi, Moose connected.';
+    function legacy() {
+      try {
+        var ta = el('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        var ok = document.execCommand('copy'); ta.remove();
+        say(ok ? done : 'Copying is blocked here. The request is: ' + text);
+      } catch (e) { say('Copying is blocked here. The request is: ' + text); }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { say(done); }, legacy); else legacy();
+  }
+  function savePng(name) {
+    var svg = document.querySelector('svg[data-chart="' + name + '"]');
+    if (!svg) { say('Nothing to save for this chart.'); return; }
+    try {
+      var vb = svg.viewBox.baseVal, w = vb.width, h = vb.height, top = 40, card = svg.closest('.card');
+      var out = sv('svg', { xmlns: NS, width: w, height: h + top, viewBox: '0 0 ' + w + ' ' + (h + top), 'font-family': 'system-ui, sans-serif' });
+      out.appendChild(sv('rect', { width: w, height: h + top, fill: color('--card') }));
+      out.appendChild(svText(0, 15, (property || brand) + ': ' + card.querySelector('h2').textContent, { fill: color('--ink'), 'font-size': 14, 'font-weight': 600 }));
+      var dates = card.querySelector('.dates');
+      out.appendChild(svText(0, 32, fit(dates ? dates.textContent : '', 120), { 'font-size': 12 }));
+      var g = sv('g', { transform: 'translate(0,' + top + ')' });
+      Array.prototype.forEach.call(svg.childNodes, function (n) { if (!(n.getAttribute && n.getAttribute('data-ui'))) g.appendChild(n.cloneNode(true)); });
+      out.appendChild(g);
+      var xml = new XMLSerializer().serializeToString(out);
+      var img = new Image();
+      img.onload = function () {
+        var s = 2, c = document.createElement('canvas');
+        c.width = w * s; c.height = (h + top) * s;
+        var ctx = c.getContext('2d'); ctx.scale(s, s); ctx.drawImage(img, 0, 0, w, h + top);
+        c.toBlob(function (b) { if (b) download(fileBase() + '-' + name + '.png', b); else say('This viewer blocked the download. Open the file in a web browser to save it.'); }, 'image/png');
+      };
+      img.onerror = function () { say('This viewer blocked the image. Open the file in a web browser to save it.'); };
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(xml);
+    } catch (e) { say('This viewer blocked the download. Open the file in a web browser to save it.'); }
+  }
+  function dailyCsv() {
+    var lines = [['Date', 'Clicks', 'Impressions', 'CTR', 'Average position'].join(',')];
+    daily.forEach(function (r) { var c = +r[1] || 0, i = +r[2] || 0; lines.push([r[0], c, i, i > 0 ? (c / i * 100).toFixed(2) + '%' : '', +r[3] > 0 ? (+r[3]).toFixed(1) : ''].map(csvCell).join(',')); });
+    download(fileBase() + '-daily.csv', new Blob([lines.join('\n')], { type: 'text/csv' }));
+  }
+  function rowsCsv() {
+    var lines = [['Search', 'Page', 'Clicks', 'Impressions', 'CTR', 'Average position', 'Brand search'].join(',')];
+    workRows.forEach(function (r) { lines.push([r.q, r.p, r.c, r.i, (r.ctr * 100).toFixed(2) + '%', r.pos > 0 ? r.pos.toFixed(1) : '', r.brand ? 'yes' : 'no'].map(csvCell).join(',')); });
+    download(fileBase() + '-searches.csv', new Blob([lines.join('\n')], { type: 'text/csv' }));
+  }
+
+  document.querySelectorAll('[data-days]').forEach(function (b) { b.addEventListener('click', function () { state.days = +b.dataset.days; renderOverview(); }); });
+  document.querySelectorAll('[data-metric]').forEach(function (b) { b.addEventListener('click', function () { state.metric = b.dataset.metric; renderControls(); renderTrend(); }); });
+  document.querySelectorAll('[data-ai]').forEach(function (b) { b.addEventListener('click', function () { state.ai = b.dataset.ai; renderControls(); renderAi(); }); });
+  byId('compare').addEventListener('change', function (e) { state.compare = e.target.checked; renderOverview(); });
+  byId('avg').addEventListener('change', function (e) { state.avg = e.target.checked; renderTrend(); });
+  var exportBtn = byId('export-btn'), exportMenu = byId('export-menu');
+  function closeMenu() { exportMenu.hidden = true; exportBtn.setAttribute('aria-expanded', 'false'); }
+  exportBtn.addEventListener('click', function (e) { e.stopPropagation(); var open = exportMenu.hidden; exportMenu.hidden = !open; exportBtn.setAttribute('aria-expanded', String(open)); });
+  exportMenu.addEventListener('click', function (e) { e.stopPropagation(); });
+  document.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+  byId('csv-daily').addEventListener('click', function () { closeMenu(); dailyCsv(); });
+  byId('csv-rows').addEventListener('click', function () { closeMenu(); rowsCsv(); });
+  byId('pdf').addEventListener('click', function () { closeMenu(); try { window.print(); } catch (e) { say('This viewer blocked printing. Open the file in a web browser and use Print, Save as PDF.'); } });
+  document.querySelectorAll('[data-png]').forEach(function (b) { b.addEventListener('click', function () { savePng(b.dataset.png); }); });
+  var TABS = ['overview', 'changed', 'work', 'ai', 'todo'];
+  document.querySelectorAll('[data-tab]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      state.tab = b.dataset.tab;
+      document.querySelectorAll('[data-tab]').forEach(function (x) { x.setAttribute('aria-selected', String(x === b)); });
+      TABS.forEach(function (t) { byId('panel-' + t).hidden = t !== state.tab; });
+      hideTip();
+    });
+  });
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) mq.addEventListener('change', render);
+  }
+  window.addEventListener('scroll', hideTip, { passive: true });
+  render();
+
+  function makeSample(brandName) {
+    var seed = 7;
+    function rnd() { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
+    function day(d, n) { return new Date(Date.parse(d + 'T00:00:00Z') + n * 86400000).toISOString().slice(0, 10); }
+    var end = '2026-11-15', d = [], b = [], o = [];
+    for (var n = 179; n >= 0; n--) {
+      var dd = day(end, -n), wd = new Date(Date.parse(dd + 'T00:00:00Z')).getUTCDay(), week = wd === 0 || wd === 6 ? 0.7 : 1, lift = 1 + (179 - n) / 179 * 0.25, dip = n < 7 ? 0.85 : 1;
+      var imp = Math.round((5200 + rnd() * 900) * week * lift), clk = Math.round(imp * (0.021 + rnd() * 0.004) * dip);
+      d.push([dd, clk, imp, +(8.2 + rnd() * 1.2 + (n < 7 ? 0.8 : 0)).toFixed(2)]);
+      var bc = Math.round(clk * (0.28 + rnd() * 0.04)), oc = Math.round(clk * (0.4 + rnd() * 0.05));
+      b.push([dd, bc, Math.round(bc / 0.55)]);
+      o.push([dd, oc, Math.round(imp * 0.62)]);
+    }
+    function part(rows, from, to) { return rows.reduce(function (s, r) { return r[0] >= from && r[0] <= to ? s + r[1] : s; }, 0); }
+    function bw(n) {
+      var from = day(end, -(n - 1)), pf = day(from, -n), pt = day(from, -1);
+      return { brand: [part(b, from, end), part(b, pf, pt)], other: [part(o, from, end), part(o, pf, pt)] };
+    }
+    var pages = ['/guides/cordless-drills/', '/guides/tool-kits/', '/glossary/torque/', '/glossary/chuck/', '/compare/drill-vs-driver/', '/guides/workshop-setup/', '/blog/first-apartment-tools/', '/glossary/brushless-motor/'];
+    var qs = ['best cordless drill', 'cordless drill for home', 'tool kit for first apartment', 'what is torque', 'torque meaning', 'what is a drill chuck', 'drill vs impact driver', 'impact driver vs drill', 'small workshop setup', 'workshop layout ideas', 'starter tool kit', 'what is a brushless motor', 'brushless vs brushed', 'best drill for beginners', 'how much torque for a drill', 'home tool kit list'];
+    var rows = [];
+    qs.forEach(function (q, i) {
+      var pos = +(1.5 + rnd() * 17).toFixed(1), imp = Math.round(200 + rnd() * 6000), ctr = pos <= 3 ? 0.08 + rnd() * 0.1 : pos <= 10 ? rnd() * 0.035 : rnd() * 0.008;
+      if (/^what is/.test(q)) ctr = ctr * 0.1;
+      rows.push([q, i % pages.length, Math.round(imp * ctr), imp, pos]);
+    });
+    rows.push(['what is torque', 7, 2, 640, 9.4]);
+    rows.push(['drill vs impact driver', 0, 4, 910, 12.3]);
+    return {
+      schemaVersion: 1, sample: true, brand: brandName, property: 'northwindtools.example', generatedAt: '2026-11-18', mainDays: 7,
+      daily: d, brandWindows: { '7': bw(7), '28': bw(28), '90': bw(90) }, brandTerms: ['northwind tools', 'northwindtools'],
+      summary: ['Sample data: made-up numbers so you can try the page. Ask for your Google Search Console report to see your own.'],
+      changed: { from: day(end, -6), to: end, beforeFrom: day(end, -13), beforeTo: day(end, -7), note: 'For the "same rank, fewer clicks" rows, what can be checked: what sits above the result for that search now, and whether the page\'s title changed.',
+        searches: [
+          { name: 'best cordless drill', clicks: 96, before: 141, moved: 'Ranks lower: from 3.9 to 5.2' },
+          { name: 'northwind tools', clicks: 188, before: 214, moved: 'Same rank, shown as often, fewer clicks: CTR 58.1%, down 4.0 points', brand: true },
+          { name: 'tool kit for first apartment', clicks: 22, before: 41, moved: 'Shown less often: 1,120 impressions, 1,980 before' },
+          { name: 'drill vs impact driver', clicks: 57, before: 31, moved: 'Ranks higher: from 8.4 to 6.1' },
+          { name: 'small workshop setup', clicks: 34, before: 19, moved: 'Shown more often: 2,410 impressions, 1,605 before' }
+        ],
+        pages: [
+          { name: '/guides/cordless-drills/', clicks: 204, before: 268, moved: 'Ranks lower: from 4.4 to 5.6' },
+          { name: '/guides/tool-kits/', clicks: 61, before: 92, moved: 'Shown less often: 3,010 impressions, 4,420 before' },
+          { name: '/compare/drill-vs-driver/', clicks: 88, before: 52, moved: 'Ranks higher: from 8.1 to 6.3' },
+          { name: '/guides/workshop-setup/', clicks: 49, before: 30, moved: 'Shown more often: 3,300 impressions, 2,240 before' }
+        ] },
+      work: { from: day(end, -27), to: end, beforeFrom: day(end, -55), beforeTo: day(end, -28), pages: pages, rows: rows, crawlDate: '2026-11-02',
+        questions: [
+          { question: 'how much torque for a drill', impressions: 1840, position: 14.2, status: 'none', page: '' },
+          { question: 'what is a brushless motor', impressions: 2210, position: 12.8, status: 'answered', page: '/glossary/brushless-motor/' },
+          { question: 'what is torque', impressions: 3900, position: 6.1, status: 'answered', page: '/glossary/torque/' }
+        ],
+        lostPages: [{ page: '/guides/tool-kits/', clicks: 260, before: 371, moved: 'Shown less often: 12,400 impressions, 17,900 before', search: 'tool kit for first apartment' }] },
+      ai: { tracked: true, from: day(end, -27), to: end, answers: 1240, prompts: 20, note: 'No tracked prompt asks the same thing as the searches above, so Hi, Moose has no stored AI answers for them.',
+        pages: [
+          { page: '/guides/cordless-drills/', clicks: 980, answers: 212, engines: ['Google Search AI Overview', 'Google AI Mode', 'ChatGPT'] },
+          { page: '/compare/drill-vs-driver/', clicks: 310, answers: 64, engines: ['Google AI Mode', 'ChatGPT'] },
+          { page: '/guides/tool-kits/', clicks: 260, answers: 0, engines: [] },
+          { page: '/glossary/torque/', clicks: 140, answers: 0, engines: [] },
+          { page: '/guides/buying-checklist/', clicks: null, answers: 88, engines: ['Google Search AI Overview', 'ChatGPT'] }
+        ] },
+      todo: [
+        { title: '/guides/tool-kits/ had 260 clicks in the last 28 days, against 371 in the 28 before, and was shown less often.', next: 'Refresh the page for "tool kit for first apartment".', takes: 'A refresh in Hi, Moose takes three to six minutes.', ask: 'Use Hi, Moose to refresh the page /guides/tool-kits/ for the search "tool kit for first apartment"' },
+        { title: 'No page answers "how much torque for a drill" (1,840 impressions, position 14.2).', next: 'Write a new piece that answers it.', takes: 'A brief in Hi, Moose takes one to three minutes.', ask: 'Use Hi, Moose to create a content brief for "how much torque for a drill"' }
+      ],
+      notes: ['Sample data: made-up numbers.', 'Google leaves rare searches out of the search rows, so the rows add up to less than the totals.', 'The report shows what changed, not why.']
+    };
+  }
+})();
+</script>
+</body>
+</html>

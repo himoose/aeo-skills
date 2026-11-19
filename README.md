@@ -10,6 +10,7 @@ Open source skills by [Hi, Moose](https://himoose.com) for answer engine optimiz
 | [`ai-visibility`](skills/ai-visibility/SKILL.md) | AI search visibility dashboard, report and to-do list from your Hi, Moose results. |
 | [`weekly-content-plan`](skills/weekly-content-plan/SKILL.md) | This week's content plan from your AI search opportunities: the top three pieces with the evidence behind each and the rest grouped by topic, with researched briefs when you ask. |
 | [`publish-ready-draft`](skills/publish-ready-draft/SKILL.md) | One AI search opportunity or topic taken all the way to a finished article: researched brief, draft, AEO audit with the fixes applied, internal links, key points, FAQs and featured image. |
+| [`google-search-console-mcp-report`](skills/google-search-console-mcp-report/SKILL.md) | Your Google Search Console numbers as a dashboard with charts: what dropped and rose and which number moved, where to work next, and which of your pages AI engines cite. [See the demo](https://himoose.github.io/aeo-skills/skills/google-search-console-mcp-report/assets/dashboard.html). |
 
 New skills are added often. Each one lives in its own folder under `skills/` and installs on its own.
 
@@ -86,12 +87,38 @@ Before a new piece, the skill checks whether your site already covers the topic.
 - **Free plan:** one run with the full live research a day (the brief). The other steps still run. Keep the Hi, Moose desktop app open while you ask.
 - **Paid plans:** no daily limit, a choice of model, everything kept in your team's Library, live search evidence in audits and FAQs, and runs in the cloud when the desktop app is closed. See [pricing](https://himoose.com/pricing/).
 
+## google-search-console-mcp-report
+
+Your Google Search Console numbers as a dashboard inside Claude or ChatGPT, next to how the same pages do in AI search.
+
+**[Open the demo dashboard](https://himoose.github.io/aeo-skills/skills/google-search-console-mcp-report/assets/dashboard.html)** (sample data, opens in your browser).
+
+Hi, Moose connects to your own Search Console property, and the Google sign-in stays on your computer. The skill reads the property through Hi, Moose MCP and works out:
+
+1. **What changed.** Clicks, impressions, CTR and average position for the week against the week before, always shown beside the last 28 days, with a line for every day.
+2. **Which number moved.** For each search and page that dropped or rose: it ranks lower, it is shown less often, or it holds the same rank and gets fewer clicks.
+3. **Brand and non-brand.** Searches that name you, split from the searches where new people find you.
+4. **Where to work.** Searches on page one that nobody clicks, searches just off page one, two of your pages competing for one search, questions people search that no page of yours answers (checked against the crawl of your site), and pages that lost clicks over four weeks.
+5. **Google next to AI search.** Search Console does not show which of your pages AI engines cite. Hi, Moose records that for the prompts you track, so the dashboard sets each page's Google clicks beside the AI answers that cite it.
+6. **A to-do list.** Up to five items, each with the page or search and its numbers. A refresh, a brief or an AEO audit for an item is made only when you ask.
+
+### What you can ask for
+
+| Ask | You get |
+|---|---|
+| "Make my Google Search Console report for this week." | The dashboard (the default): number tiles, a line chart by day for clicks, impressions, CTR or position with the period before, brand against non-brand clicks, the searches and pages that changed, a chart of position against CTR, your pages in Google and in AI answers, and the to-do list. Switch between 7, 28 and 90 days, hover over any chart for the numbers, and save charts as PNG, the numbers as CSV and the page as PDF. |
+| "Write my Search Console report as text for an email." | The same findings as a short written report with tables. |
+| "Why did our Google clicks drop last week?" | The searches and pages behind the change, and which number moved for each. |
+| "What should I work on from Search Console?" | The "where to work" lists and the to-do list. |
+
+The skill only reads your Search Console numbers. Nothing in Search Console changes, and the report never says why a number moved, only which one did.
+
 ## Quick start
 
-1. **Get Hi, Moose (free).** [Download the desktop app](https://himoose.com/downloads/) and add your site. For `ai-visibility`, add the prompts you want to track and run your first visibility check.
+1. **Get Hi, Moose (free).** [Download the desktop app](https://himoose.com/downloads/) and add your site. For `ai-visibility`, add the prompts you want to track and run your first visibility check. For `google-search-console-mcp-report`, connect Google Search Console under **Connections** ([steps](https://himoose.com/docs/integrations/google-search-console/)).
 2. **Connect Hi, Moose to your AI app.** Add a custom connector with the address `https://mcp.himoose.com/mcp` and sign in with your Hi, Moose account. [Step-by-step for Claude, ChatGPT and others](https://himoose.com/docs/integrations/hi-moose-mcp/).
 3. **Add the skills** you want to your app: see [Install](#install) below.
-4. **Ask** for your dashboard, your to-do list, this week's content plan or a publish-ready article. Keep the Hi, Moose desktop app open while you ask.
+4. **Ask** for your dashboard, your to-do list, this week's content plan, a publish-ready article or your Google Search Console report. Keep the Hi, Moose desktop app open while you ask.
 
 ## Install
 
@@ -117,7 +144,7 @@ This repository is also a Claude Code plugin. One install adds every skill and t
 /plugin install himoose@himoose
 ```
 
-Then run `/mcp`, choose `plugin:himoose:himoose` and **Authenticate** to sign in. Ask in plain words, or run `/himoose:ai-visibility`, `/himoose:weekly-content-plan` or `/himoose:publish-ready-draft`.
+Then run `/mcp`, choose `plugin:himoose:himoose` and **Authenticate** to sign in. Ask in plain words, or run `/himoose:ai-visibility`, `/himoose:weekly-content-plan`, `/himoose:publish-ready-draft` or `/himoose:google-search-console-mcp-report`.
 
 If you already connected Hi, Moose to Claude Code yourself, you will see the same tools twice. Remove one of them in `/mcp`.
 
@@ -140,6 +167,7 @@ The skills use the open [Agent Skills](https://agentskills.io) format. Copy the 
 | The assistant does not know the Hi, Moose tools | Connect Hi, Moose (Quick start step 2) and make sure the connector is turned on in this chat. Start a new chat after connecting. |
 | "The Hi, Moose app is not open" or the request keeps waiting | Open the Hi, Moose desktop app on the computer that holds your results, signed in with the same account. |
 | "No stored results yet" | Run a visibility check in the Hi, Moose app first. Results appear after the first run. |
+| "Google Search Console is not connected" | Open the Hi, Moose desktop app, go to **Connections**, connect Google Search Console and pick the property for your project. Then ask again. |
 | The dashboard's Export or Save PNG buttons do nothing | Some chat previews block downloads. Save the page as an HTML file, open it in your web browser and try again. |
 | "Open in Hi, Moose" does nothing | Install or update the Hi, Moose desktop app, and allow your browser to open it when it asks. |
 | Sentiment shows "not scored" | Sentiment, narrative and feature accuracy scores are part of paid plans. Mentions, citations, rank and competitors work on every plan. |
@@ -157,6 +185,9 @@ Yes. The skill is free and open source (MIT), and Hi, Moose has a free plan with
 **How do I build an AI search visibility dashboard?**
 Install the skill, connect Hi, Moose, and ask "Build my AI search visibility dashboard." You get one HTML page with date and engine filters, charts, competitors and a to-do list. Open it in a browser, share it with your team, or use it as a starting point for a dashboard in your own app.
 
+**Is there a Google Search Console MCP for Claude and ChatGPT?**
+Yes. Hi, Moose MCP has two Search Console tools: one checks the connection, and one runs any search performance query with Google's own fields plus comparison with an earlier period and sorting by what changed ([tool reference](https://himoose.com/docs/integrations/hi-moose-mcp/tools/)). Connect your property in the Hi, Moose desktop app, add the connector to Claude or ChatGPT, and ask in plain words. The `google-search-console-mcp-report` skill turns those tools into a dashboard or a written report. Connecting Search Console is part of the free plan.
+
 **How is this different from asking Claude or ChatGPT to write the article?**
 A general assistant writes from a few web searches and what it already knows. Hi, Moose reads the top three ranking pages in full, People Also Ask, current AI answers, the searches Gemini runs, your brand documents and your own site, plans the piece around the gaps none of the ranking pages cover, writes it in your voice, audits it for answer engines, and the skill applies the fixes. Started from the AI visibility to-do list, it also knows which AI engines leave your brand out and reads the pages they cite instead.
 
@@ -173,7 +204,7 @@ You can, but API answers can differ from what people see in the apps, and you wo
 Yes. In Claude Code it installs as a plugin with the Hi, Moose connector. In Codex and other agents that read `SKILL.md` skill folders, copy the `skills/ai-visibility` folder and connect Hi, Moose MCP. See [Install](#install).
 
 **Does the skill send my data anywhere?**
-No. The skills work through Hi, Moose MCP and show the results in your own chat. `ai-visibility` only reads your stored results. `weekly-content-plan` reads them, and makes briefs only when you ask, which Hi, Moose saves in your Library. `publish-ready-draft` makes a brief, a draft, an audit, FAQs, key points and an image, which Hi, Moose also saves in your Library; it publishes nothing. The skills hold no keys.
+No. The skills work through Hi, Moose MCP and show the results in your own chat. `ai-visibility` only reads your stored results. `weekly-content-plan` reads them, and makes briefs only when you ask, which Hi, Moose saves in your Library. `publish-ready-draft` makes a brief, a draft, an audit, FAQs, key points and an image, which Hi, Moose also saves in your Library; it publishes nothing. `google-search-console-mcp-report` reads your Search Console numbers, which your own computer asks Google for, and makes a refresh, a brief or an audit only when you ask. The skills hold no keys.
 
 ## Why Hi, Moose collects the data
 
@@ -210,11 +241,18 @@ skills/publish-ready-draft/
   references/apply-audit-fixes.md  how the audit's fixes are applied to the draft
   references/handoff.md         the layout of the finished package
   agents/openai.yaml            ChatGPT and Codex settings
+skills/google-search-console-mcp-report/
+  SKILL.md                      the steps from the Search Console property to the report
+  references/findings.md        how each finding is worked out from the rows
+  references/dashboard.md       how to build the dashboard
+  references/report-layout.md   the layout of the written report
+  assets/dashboard.html         the dashboard page (opens with sample data)
+  agents/openai.yaml            ChatGPT and Codex settings
 .claude-plugin/                 Claude Code plugin and marketplace files
 .mcp.json                       the Hi, Moose connector for Claude Code
 ```
 
-Open `skills/ai-visibility/assets/dashboard.html` in your browser to try the dashboard with sample data.
+Open `skills/ai-visibility/assets/dashboard.html` or `skills/google-search-console-mcp-report/assets/dashboard.html` in your browser to try a dashboard with sample data. The Search Console one is also [online as a demo](https://himoose.github.io/aeo-skills/skills/google-search-console-mcp-report/assets/dashboard.html).
 
 ## Security and privacy
 

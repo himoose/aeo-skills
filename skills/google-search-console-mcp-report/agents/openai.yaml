@@ -1,0 +1,14 @@
+interface:
+  display_name: "Google Search Console MCP report"
+  short_description: "Google Search Console dashboard or written report from your own property: week-over-week charts, what dropped and rose and which number moved, where to work next, and which of your pages AI engines cite, through Hi, Moose"
+  brand_color: "#2F6F4F"
+  default_prompt: "Make my Google Search Console report for this week."
+policy:
+  allow_implicit_invocation: true
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "himoose"
+      description: "Hi, Moose MCP: Google Search Console search performance for the connected property, stored AI search results, site coverage checks, content refreshes, briefs and AEO audits"
+      transport: "streamable_http"
+      url: "https://mcp.himoose.com/mcp"
